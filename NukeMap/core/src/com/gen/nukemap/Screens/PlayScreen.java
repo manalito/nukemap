@@ -21,8 +21,8 @@ public class PlayScreen implements Screen {
     public PlayScreen(NukeMap game){
         this.game = game;
         texture = new Texture("map.png");
-        gamecam = new OrthographicCamera(Gdx.graphics.getWidth() /2, Gdx.graphics.getHeight() / 2 );
-        gamePort = new ScreenViewport(gamecam);
+        gamecam = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        gamePort = new FitViewport(640,480, gamecam);
     }
 
     @Override
@@ -34,18 +34,17 @@ public class PlayScreen implements Screen {
     public void render(float delta) {
         Gdx.gl.glClearColor(0,0,1,1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
+        // gamePort.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         game.batch.begin();
-        game.batch.draw(texture,0,0, Gdx.graphics.getWidth() , Gdx.graphics.getHeight());
+        game.batch.draw(texture,0,0,640 , 480);
         //resize(texture.getWidth(), texture.getHeight());
         game.batch.end();
     }
 
     @Override
     public void resize(int width, int height) {
-        gamePort.update(width, height);
-        gamecam.update();
-
+        //gamePort.update(width, height);
+        //gamecam.update();
 
     }
 
