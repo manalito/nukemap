@@ -17,12 +17,13 @@ io.on('connection',function(socket){
            data.id=socket.id;
            socket.broadcast.emit('playerMoved',data);
 
-            //console.log("Player has moved : " + "ID : " + data.id + "X: " + data.x + "Y: " + data.y );
+            console.log("Player has moved : " + "ID : " + data.id + "X: " + data.x + "Y: " + data.y  + "State: " + data.state);
 
            for(var i=0; i < players.length; i++){
                 if(players.id ==data.id){
                     players[i].x = data.x;
                     players[i].y = data.y;
+                    //players[i].state = data.state;
                 }
            }
 
@@ -40,8 +41,9 @@ io.on('connection',function(socket){
   players.push(new player(socket.id,0,0));
 });
 
-function player(id,x,y){
+function player(id,x,y/*,state*/){
     this.id = id;
     this.x = x;
     this.y = y;
+   // this.state = state;
 }
