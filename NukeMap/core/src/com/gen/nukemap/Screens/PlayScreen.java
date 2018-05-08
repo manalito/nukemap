@@ -20,7 +20,7 @@ public class PlayScreen implements Screen {
     Texture texture;
     private OrthographicCamera gamecam;
     private Viewport gamePort;
-    private static Client client;
+    private Client client;
 
 
 
@@ -51,6 +51,7 @@ public class PlayScreen implements Screen {
             client.drawBomberman(game.batch);
             client.handleInput(Gdx.graphics.getDeltaTime());
             client.drawOthersBomberman(game.batch);
+            client.updateClientToServer(Gdx.graphics.getDeltaTime());
         }
         //resize(texture.getWidth(), texture.getHeight());
         game.batch.end();
