@@ -8,6 +8,11 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.viewport.*;
 import com.gen.nukemap.NukeMap;
+import com.gen.nukemap.Server.Client;
+import com.gen.nukemap.Server.Personnage;
+import com.gen.nukemap.Server.Client;
+
+import java.util.HashMap;
 
 public class PlayScreen implements Screen {
 
@@ -15,14 +20,17 @@ public class PlayScreen implements Screen {
     Texture texture;
     private OrthographicCamera gamecam;
     private Viewport gamePort;
+    private Client client;
 
 
 
     public PlayScreen(NukeMap game){
         this.game = game;
-        texture = new Texture("map.png");
+        texture = new Texture("core/assets/map.png");
         gamecam = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         gamePort = new FitViewport(640,480, gamecam);
+        client = new Client();
+        client.create();
     }
 
     @Override
@@ -37,6 +45,14 @@ public class PlayScreen implements Screen {
         // gamePort.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         game.batch.begin();
         game.batch.draw(texture,0,0,640 , 480);
+
+
+        if(client !=null){
+            client.drawBomberman(game.batch);
+            client.handleInput(Gdx.graphics.getDeltaTime());
+            client.drawOthersBomberman(game.batch);
+            client.updateClientToServer(Gdx.graphics.getDeltaTime());
+        }
         //resize(texture.getWidth(), texture.getHeight());
         game.batch.end();
     }
@@ -47,6 +63,8 @@ public class PlayScreen implements Screen {
         //gamecam.update();
 
     }
+
+
 
     @Override
     public void pause() {

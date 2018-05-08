@@ -6,6 +6,8 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.gen.nukemap.Screens.*;
 
+import com.gen.nukemap.Server.*;
+
 public class NukeMap extends Game {
     public SpriteBatch batch;
     public static AssetManager manager;
