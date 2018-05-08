@@ -6,12 +6,23 @@ import com.badlogic.gdx.math.Vector2;
 
 public class Personnage extends Sprite {
 
-    Vector2 previousPosition;
-    Vector2 actualPosition;
+    private Vector2 previousPosition;
+    private Vector2 actualPosition;
+
+    public enum STATE {FRONT, BOTTOM, LEFT, RIGHT}
+
+    private STATE state;
+
+    public static STATE [] getStates(){
+        return STATE.values();
+    }
 
     public Personnage(Texture texture){
+
         super(texture);
+        setBounds(0,0,30,48);
         previousPosition= new Vector2(getX(),getY());
+        state = STATE.BOTTOM;
     }
 
     public boolean hasMoved(){
@@ -22,4 +33,14 @@ public class Personnage extends Sprite {
         }
         return false;
     }
+
+    public STATE getState(){
+        return state;
+    }
+
+    public void setState(STATE newState){
+        state = newState;
+    }
+
+
 }
