@@ -1,16 +1,28 @@
 package com.gen.nukemap.Protocol.Serialization;
 
-import com.badlogic.gdx.utils.Json;
-import com.badlogic.gdx.utils.JsonValue;
+import com.gen.nukemap.GameObject.Score;
 
-public class LeaderboardMessage implements Json.Serializable {
-  @Override
-  public void write(Json json) {
-  
+import java.util.ArrayList;
+import java.util.List;
+
+public class LeaderboardMessage {
+
+  public LeaderboardMessage(){
+  }
+  public LeaderboardMessage(List<Score> scoreList){
+    setScoreList(scoreList);
   }
   
-  @Override
-  public void read(Json json, JsonValue jsonData) {
+  private List<Score> scoreList = new ArrayList<Score>();
   
+  public List<Score> getScoreList() {
+    List<Score> scoreList = new ArrayList<Score>();
+    scoreList.addAll(scoreList);
+    return scoreList;
+  }
+  
+  public void setScoreList(List<Score> scoreList) {
+    this.scoreList.clear();
+    this.scoreList.addAll(scoreList);
   }
 }

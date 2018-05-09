@@ -65,25 +65,25 @@ public class Client extends ApplicationAdapter {
             if(Gdx.input.isKeyPressed(Input.Keys.LEFT)){
                 personnage.setPosition(personnage.getX() - (delta * 200),personnage.getY());
                 personnage.setRegion(bombermanLeft);
-                //personnage.setState(Personnage.STATE.LEFT);
+                //personnage.setState(Personage.STATE.LEFT);
              }
              else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
                 personnage.setPosition(personnage.getX() + (delta * 200),personnage.getY());
                 personnage.setRegion(bombermanRight);
-                //personnage.setState(Personnage.STATE.RIGHT);
+                //personnage.setState(Personage.STATE.RIGHT);
 
             }
             else if(Gdx.input.isKeyPressed(Input.Keys.UP)){
                 personnage.setPosition(personnage.getX() ,personnage.getY() + (delta * 200));
                 personnage.setRegion(bombermanBottom);
-                //personnage.setState(Personnage.STATE.BOTTOM);
+                //personnage.setState(Personage.STATE.BOTTOM);
 
 
             }
             else if(Gdx.input.isKeyPressed(Input.Keys.DOWN)){
                 personnage.setPosition(personnage.getX() ,personnage.getY() - (delta * 200));
                 personnage.setRegion(bombermanFront);
-               // personnage.setState(Personnage.STATE.FRONT);
+               // personnage.setState(Personage.STATE.FRONT);
 
 
             }
@@ -191,7 +191,7 @@ public class Client extends ApplicationAdapter {
 
                         if(autresPersonnages.get(playerID) != null){
                             autresPersonnages.get(playerID).setPosition(x.floatValue(),y.floatValue());
-                            //autresPersonnages.get(playerID).setState(Personnage.getStates()[i]); // recupere la position du state
+                            //autresPersonnages.get(playerID).setState(Personage.getStates()[i]); // recupere la position du state
                         }
                 }catch (JSONException e){
                     Gdx.app.log("SocketIO","Error getting player moving ID");
@@ -212,7 +212,7 @@ public class Client extends ApplicationAdapter {
                         position.x = ((Double) array.getJSONObject(i).getDouble("x")).floatValue();
                         position.y = ((Double) array.getJSONObject(i).getDouble("y")).floatValue();
 
-                        //Personnage.STATE state = Personnage.getStates()[array.getJSONObject(i).getInt("state")];
+                        //Personage.STATE state = Personage.getStates()[array.getJSONObject(i).getInt("state")];
                         ennemi.setPosition(position.x,position.y);
 
 
