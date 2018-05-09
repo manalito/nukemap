@@ -35,7 +35,7 @@ public class MenuScreen implements Screen{
     private Viewport viewport;
     private OrthographicCamera camera;
     private TextureAtlas atlas;
-    private Texture background = new Texture("core/assets/landscape-background.png");
+    private Texture background = new Texture("landscape-background.png");
     protected Skin skin;
 
     public MenuScreen()
@@ -120,9 +120,9 @@ public class MenuScreen implements Screen{
         menuTable.center();
 
 
-        ImageButton playButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture("core/assets/playbtn.jpg"))));
-        ImageButton scoreButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture("core/assets/scorebtn.jpg"))));
-        ImageButton quitButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture("core/assets/quitbtn.jpg"))));
+        ImageButton playButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture("playbtn.jpg"))));
+        ImageButton scoreButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture("scorebtn.jpg"))));
+        ImageButton quitButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture("quitbtn.jpg"))));
         //playButton.setX(Gdx.graphics.getWidth()/2);
         //playButton.setY(Gdx.graphics.getHeight()/2 + playButton.getHeight()/2);
 

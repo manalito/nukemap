@@ -124,8 +124,8 @@ public class Client extends ApplicationAdapter {
         /*bomberman1 = new TextureAtlas("core/assets/bomberman.png");
         bomberman2 = new TextureAtlas("core/assets/bomberman.png");
         bomberman1Statique = new Texture(bomberman1).get*/
-        bomberman1 = new Texture("core/assets/bomberman.png");
-        bomberman2 = new Texture("core/assets/bomberman.png");
+        bomberman1 = new Texture("bomberman.png");
+        bomberman2 = new Texture("bomberman.png");
 
         bombermanFront = new TextureRegion(bomberman1,1,0,19,31);
         bombermanBottom = new TextureRegion(bomberman1,1,32,19,32);

@@ -26,7 +26,7 @@ public class PlayScreen implements Screen {
 
     public PlayScreen(NukeMap game){
         this.game = game;
-        texture = new Texture("core/assets/map.png");
+        texture = new Texture("map.png");
         gamecam = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         gamePort = new FitViewport(640,480, gamecam);
         client = new Client();
