@@ -4,7 +4,7 @@ public class PowerUp extends GameObject{
   public PowerUp(){
     super();
   }
-  public PowerUp(int positionX, int positionY, int amountBonus, int radiusBonus){
+  /*public PowerUp(int positionX, int positionY, int amountBonus, int radiusBonus){
     super(positionX, positionY);
     this.amountBonus = amountBonus;
     this.radiusBonus = radiusBonus;
@@ -27,6 +27,6 @@ public class PowerUp extends GameObject{
   
   public void setAmountBonus(int amountBonus) {
     this.amountBonus = amountBonus;
-  }
+  }*/
   
 }

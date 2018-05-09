@@ -11,7 +11,7 @@ io.on('connection',function(socket){
 
   console.log("Player is Connected");
     socket.emit('socketID',{id: socket.id });
-    socket.emit('getPlayers',players);
+    socket.emit('addOtherPlayers',players);
     socket.broadcast.emit('newPlayer', { id: socket.id });
     socket.on('playerMoved',function(data){
            data.id=socket.id;
@@ -19,13 +19,13 @@ io.on('connection',function(socket){
 
             console.log("Player has moved : " + "ID : " + data.id + "X: " + data.x + "Y: " + data.y  + "State: " + data.state);
 
-           for(var i=0; i < players.length; i++){
+           /*for(var i=0; i < players.length; i++){
                 if(players.id ==data.id){
                     players[i].x = data.x;
                     players[i].y = data.y;
                     //players[i].state = data.state;
                 }
-           }
+           }*/
 
     });
 
@@ -41,9 +41,9 @@ io.on('connection',function(socket){
   players.push(new player(socket.id,0,0));
 });
 
-function player(id,x,y/*,state*/){
+function player(id,x,y,state){
     this.id = id;
     this.x = x;
     this.y = y;
-   // this.state = state;
+    this.state = state;
 }

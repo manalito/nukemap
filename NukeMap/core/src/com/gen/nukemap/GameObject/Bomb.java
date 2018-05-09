@@ -1,68 +1,50 @@
 package com.gen.nukemap.GameObject;
 
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Vector2;
+
 public class Bomb extends GameObject {
-  public Bomb(){
-    super();
-  }
-  public Bomb(int positionX, int positionY, int radius, int amount){
-    super(positionX, positionY);
-    this.radius = radius;
-    this.amount = amount;
-  }
-  public Bomb(Bomb bomb){
-    super(bomb.getPositionX(), bomb.getPositionY());
-    this.amount = bomb.amount;
-    this.radius = bomb.radius;
-    this.maxAmount = bomb.maxAmount;
-    this.maxRadius = bomb.maxRadius;
-  }
-  public int getRadius() {
-    return radius;
-  }
-  
-  public void setRadius(int radius) {
-    this.radius = radius;
-  }
-  
-  public int getAmount() {
-    return amount;
-  }
-  
-  public void setAmount(int amount) {
-    this.amount = amount;
-  }
-  
-  public int getMaxAmount() {
-    return maxAmount;
-  }
-  
-  public void setMaxAmount(int maxAmount) {
-    this.maxAmount = maxAmount;
-  }
-  
-  public int getMaxRadius() {
-    return maxRadius;
-  }
-  
-  public void setMaxRadius(int maxRadius) {
-    this.maxRadius = maxRadius;
-  }
-  
-  public void addPowerUp(PowerUp powerUp){
-    if(this.amount + powerUp.getAmountBonus() < maxAmount){
-      this.amount += powerUp.getAmountBonus();
+
+    private int radius;
+    private String idPlayer = "";
+
+    public Bomb() {
+        super();
     }
-    if(this.radius + powerUp.getRadiusBonus() < maxRadius) {
-      this.radius += powerUp.getRadiusBonus();
+
+    public Bomb(String idPlayer, Vector2 position, Texture texture, float x, float y, float width, float height, int radius) {
+        super(position, texture, x, y, width, height);
+        this.radius = radius;
+        this.idPlayer = idPlayer;
+
     }
-  }
-  public void explode(){
-  
-  }
-  private int radius;
-  private int amount;
-  private int maxAmount;
-  private int maxRadius;
-  
-  
+
+    public Bomb(Bomb bomb) {
+
+        super(bomb.position, bomb.getTexture(), bomb.getX(), bomb.getY(), bomb.getWidth(), bomb.getWidth());
+        this.radius = bomb.radius;
+        this.idPlayer = bomb.idPlayer;
+    }
+
+    public int getRadius() {
+        return radius;
+    }
+
+    public void setRadius(int radius) {
+        this.radius = radius;
+    }
+
+    public String getIdPlayer() {
+        return idPlayer;
+    }
+
+    public void setIdPlayer(String idPlayer){
+        this.idPlayer = idPlayer;
+    }
+
+    public void explode() {
+
+    }
+
+
 }
