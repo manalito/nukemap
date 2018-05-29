@@ -6,8 +6,11 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.World;
 import com.gen.nukemap.GameObject.Player;
+import com.gen.nukemap.NukeMap;
 import io.socket.client.*;
 import io.socket.emitter.Emitter;
 import org.json.JSONArray;
@@ -37,7 +40,11 @@ public class Client extends ApplicationAdapter {
     private static final float TIME_TO_UPDATE_CLIENT = 1/60f;
     private float timer;
 
-    public Client(){
+    private World world;
+
+    public Client(World world){
+
+        this.world = world;
 
     }
 
@@ -59,28 +66,42 @@ public class Client extends ApplicationAdapter {
     public void handleInput(float delta){
         if (mainPlayer != null) {
 
-            if(Gdx.input.isKeyPressed(Input.Keys.LEFT)){
-                mainPlayer.setPosition(mainPlayer.getX() - (delta * 200), mainPlayer.getY());
+            if(Gdx.input.isKeyPressed(Input.Keys.LEFT) && mainPlayer.getBody().getLinearVelocity().x >= -3.1f){
+                //mainPlayer.getBody().setTransform( mainPlayer.getX(), mainPlayer.getY(),0 );
+                //mainPlayer.getBody().setLinearVelocity(new Vector2(-100f, 0));
+                mainPlayer.setPosition(mainPlayer.getX() - (delta * 1), mainPlayer.getY());
+                mainPlayer.getBody().applyLinearImpulse(new Vector2(-3f, 0), mainPlayer.getBody().getWorldCenter(),true);
                 mainPlayer.setRegion(bombermanLeft);
                 mainPlayer.setState(Player.STATE.LEFT);
              }
-             else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
-                mainPlayer.setPosition(mainPlayer.getX() + (delta * 200), mainPlayer.getY());
+             else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && mainPlayer.getBody().getLinearVelocity().x <= 3.1f){
+                //mainPlayer.getBody().setLinearVelocity(new Vector2(100f, 0));
+                mainPlayer.setPosition(mainPlayer.getX() + (delta * 1), mainPlayer.getY());
+                mainPlayer.getBody().applyLinearImpulse(new Vector2(3f, 0), mainPlayer.getBody().getWorldCenter(),true);
                 mainPlayer.setRegion(bombermanRight);
                 mainPlayer.setState(Player.STATE.RIGHT);
 
             }
-            else if(Gdx.input.isKeyPressed(Input.Keys.UP)){
-                mainPlayer.setPosition(mainPlayer.getX() , mainPlayer.getY() + (delta * 200));
+            else if(Gdx.input.isKeyPressed(Input.Keys.UP) && mainPlayer.getBody().getLinearVelocity().y <= 3.1f){
+                //mainPlayer.getBody().setLinearVelocity(new Vector2(0, 0.1f));
+                mainPlayer.getBody().applyLinearImpulse(new Vector2(0, 3f), mainPlayer.getBody().getWorldCenter(),true);
+                mainPlayer.setPosition(mainPlayer.getX() , mainPlayer.getY() + (delta * 1));
                 mainPlayer.setRegion(bombermanBottom);
                 mainPlayer.setState(Player.STATE.BOTTOM);
 
 
             }
-            else if(Gdx.input.isKeyPressed(Input.Keys.DOWN)){
-                mainPlayer.setPosition(mainPlayer.getX() , mainPlayer.getY() - (delta * 200));
+            else if(Gdx.input.isKeyPressed(Input.Keys.DOWN) && mainPlayer.getBody().getLinearVelocity().y >= -3.1f){
+                //mainPlayer.getBody().setLinearVelocity(new Vector2(0, -1f));
+                mainPlayer.getBody().applyLinearImpulse(new Vector2(0, -3f), mainPlayer.getBody().getWorldCenter(),true);
+
+                mainPlayer.setPosition(mainPlayer.getX() , mainPlayer.getY() - (delta * 1));
                 mainPlayer.setRegion(bombermanFront);
                 mainPlayer.setState(Player.STATE.FRONT);
+            } else if(Gdx.input.isKeyPressed(Input.Keys.SPACE)){
+                mainPlayer.getBody().setLinearVelocity(new Vector2(0,0));
+            } else{
+                mainPlayer.getBody().setLinearVelocity(new Vector2(0,0));
             }
 
         }
@@ -103,12 +124,15 @@ public class Client extends ApplicationAdapter {
 
     public void drawBomberman(SpriteBatch batch){
         if (mainPlayer !=null){
+            mainPlayer.updatePlayer();
             mainPlayer.draw(batch); // dessine le bomberman en fonction du bouton appuye par l'utilisateur
         }
     }
 
     public void drawOthersBomberman(SpriteBatch batch){
         for(HashMap.Entry<String,Player> autrePersonnage : autresPersonnages.entrySet()){
+            autrePersonnage.getValue().updatePlayer();
+            //autrePersonnage.getValue().getBody().setTransform(autrePersonnage.getValue().getX(), autrePersonnage.getValue().getY(), 0);
             autrePersonnage.getValue().draw(batch);
             //autrePersonnage.getValue().draw(batch,200);
         }
@@ -152,7 +176,8 @@ public class Client extends ApplicationAdapter {
             @Override
             public void call(Object... args) {
                 Gdx.app.log("SocketIO","Connected");
-                mainPlayer = new Player(new Vector2(0,0),bomberman1,0,0,48,48,3, 100);
+                mainPlayer = new Player(world, new Vector2(356,400),bomberman1,0,0,48,48,3, 100);
+                mainPlayer.setRegion(bombermanBottom);
             }
         }).on("socketID", new Emitter.Listener() {
             @Override
@@ -172,7 +197,7 @@ public class Client extends ApplicationAdapter {
                 try{
                     String id = obj.getString("id");
                     Gdx.app.log("SocketIO","New player connected:" + id);
-                    Player autrePerso = new Player(new Vector2(0,0),bomberman1,0,0,48,48,3, 100);
+                    Player autrePerso = new Player(world, new Vector2(356,400),bomberman1,0,0,48,48,3, 100);
                     autrePerso.setRegion(bombermanBottom);
                     autresPersonnages.put(id,autrePerso);
                 }catch (JSONException e){
@@ -193,7 +218,8 @@ public class Client extends ApplicationAdapter {
                         String state = dataToSend.getString("state");
 
                         if(autresPersonnages.get(playerID) != null){
-                            autresPersonnages.get(playerID).setPosition(x.floatValue(),y.floatValue());
+                            autresPersonnages.get(playerID).getBody().setTransform(x.floatValue() +  autresPersonnages.get(playerID).getWidth() / 2, y.floatValue() + autresPersonnages.get(playerID).getHeight() / 2, 0);
+                            autresPersonnages.get(playerID).updatePlayer();
                             autresPersonnages.get(playerID).setState(Player.STATE.valueOf(state)); // recupere la position du state
                             switch (autresPersonnages.get(playerID).getState()){
                                 case LEFT:
@@ -228,7 +254,7 @@ public class Client extends ApplicationAdapter {
                 JSONArray array =(JSONArray) args[0];
                 try{
                     for(int i=0; i < array.length(); i++){
-                        Player ennemi = new Player(new Vector2(0,0),bomberman1,0,0,48,48,3, 100);
+                        Player ennemi = new Player(world, new Vector2(356,400),bomberman1,0,0,48,48,3, 100);
                         autresPersonnages.put(array.getJSONObject(i).getString("id"),ennemi);
                         Gdx.app.log("New Player : ",array.getJSONObject(i).getString("id"));
                     }

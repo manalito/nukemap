@@ -11,6 +11,8 @@ import com.gen.nukemap.Server.*;
 public class NukeMap extends Game {
     public static final int V_WIDTH = 960;
     public static final int V_HEIGHT = 704;
+    public static final float PPM = 100;
+
     public SpriteBatch batch;
     public static AssetManager manager;
 

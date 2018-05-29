@@ -41,14 +41,14 @@ public class PlayScreen implements Screen {
     public PlayScreen(NukeMap game){
         this.game = game;
         texture = new Texture("map.png");
-        gamecam = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        gamePort = new FitViewport(NukeMap.V_WIDTH,NukeMap.V_HEIGHT, gamecam);
+        gamecam = new OrthographicCamera(Gdx.graphics.getWidth()  / NukeMap.PPM, Gdx.graphics.getHeight() / NukeMap.PPM);
+        gamePort = new FitViewport(NukeMap.V_WIDTH / NukeMap.PPM, NukeMap.V_HEIGHT / NukeMap.PPM, gamecam);
 
         mapLoader = new TmxMapLoader();
         map = mapLoader.load("map.tmx");
-        renderer = new OrthogonalTiledMapRenderer(map);
+        renderer = new OrthogonalTiledMapRenderer(map, 1 / NukeMap.PPM);
 
-        gamecam.position.set(gamePort.getWorldWidth() / 2, gamePort.getWorldHeight() /2,0);
+        gamecam.position.set(gamePort.getWorldWidth() / 2, gamePort.getWorldHeight() / 2,0);
 
         world = new World(new Vector2(0,0), true);
         b2dr = new Box2DDebugRenderer();
@@ -59,14 +59,14 @@ public class PlayScreen implements Screen {
         Body body;
 
         // Unbreakable objects
-        for(MapObject object : map.getLayers().get(3).getObjects().getByType(RectangleMapObject.class)){
+        for(MapObject object : map.getLayers().get(2).getObjects().getByType(RectangleMapObject.class)){
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
             bDef.type = BodyDef.BodyType.StaticBody;
-            bDef.position.set(rect.getX() + rect.getWidth() / 2, rect.getY() + rect.getHeight() / 2);
+            bDef.position.set((rect.getX() + rect.getWidth() / 2) / NukeMap.PPM, (rect.getY() + rect.getHeight() / 2) / NukeMap.PPM);
 
             body = world.createBody(bDef);
-            shape.setAsBox(rect.getWidth() / 2, rect.getHeight() / 2);
+            shape.setAsBox(rect.getWidth() / 2 / NukeMap.PPM, rect.getHeight() / 2  / NukeMap.PPM);
             fDef.shape = shape;
 
             body.createFixture(fDef);
@@ -77,16 +77,16 @@ public class PlayScreen implements Screen {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
             bDef.type = BodyDef.BodyType.StaticBody;
-            bDef.position.set(rect.getX() + rect.getWidth() / 2, rect.getY() + rect.getHeight() / 2);
+            bDef.position.set((rect.getX() + rect.getWidth() / 2) / NukeMap.PPM, (rect.getY() + rect.getHeight() / 2) / NukeMap.PPM);
 
             body = world.createBody(bDef);
-            shape.setAsBox(rect.getWidth() / 2, rect.getHeight() / 2);
+            shape.setAsBox(rect.getWidth() / 2 / NukeMap.PPM, rect.getHeight() / 2 / NukeMap.PPM);
             fDef.shape = shape;
 
             body.createFixture(fDef);
         }
 
-        client = new Client();
+        client = new Client(world);
         client.create();
     }
 
@@ -129,6 +129,8 @@ public class PlayScreen implements Screen {
         }
         //resize(texture.getWidth(), texture.getHeight());
         game.batch.end();
+
+        world.step(Gdx.graphics.getDeltaTime(), 6, 2);
     }
 
     @Override

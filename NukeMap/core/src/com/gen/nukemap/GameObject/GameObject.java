@@ -3,21 +3,27 @@ package com.gen.nukemap.GameObject;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.World;
+import com.gen.nukemap.NukeMap;
 
-public class GameObject extends Sprite {
+public abstract class GameObject extends Sprite {
 
     protected Vector2 position;
 
+    protected World world;
 
-    public GameObject() {
+
+    protected GameObject() {
         super();
         position = new Vector2(0,0);
     }
 
-    public GameObject(Vector2 position,  Texture texture, float x, float y, float width, float height) {
+    protected GameObject(World world,Vector2 position,  Texture texture, float x, float y, float width, float height) {
         super(texture);
-        setBounds(x,y,width,height);
-        this.position = new Vector2(getX(), getY());
+        this.world = world;
+        setBounds(x,y,width / NukeMap.PPM,height / NukeMap.PPM);
+        this.position = position;
+        setPosition(position.x / NukeMap.PPM, position.y / NukeMap.PPM);
     }
 
     public Vector2 getPosition() {

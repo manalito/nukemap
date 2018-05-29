@@ -2,6 +2,7 @@ package com.gen.nukemap.GameObject;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.World;
 
 public class Bomb extends GameObject {
 
@@ -12,8 +13,8 @@ public class Bomb extends GameObject {
         super();
     }
 
-    public Bomb(String idPlayer, Vector2 position, Texture texture, float x, float y, float width, float height, int radius) {
-        super(position, texture, x, y, width, height);
+    public Bomb(World world, String idPlayer, Vector2 position, Texture texture, float x, float y, float width, float height, int radius) {
+        super(world, position, texture, x, y, width, height);
         this.radius = radius;
         this.idPlayer = idPlayer;
 
@@ -21,7 +22,7 @@ public class Bomb extends GameObject {
 
     public Bomb(Bomb bomb) {
 
-        super(bomb.position, bomb.getTexture(), bomb.getX(), bomb.getY(), bomb.getWidth(), bomb.getWidth());
+        super(bomb.world, bomb.position, bomb.getTexture(), bomb.getX(), bomb.getY(), bomb.getWidth(), bomb.getWidth());
         this.radius = bomb.radius;
         this.idPlayer = bomb.idPlayer;
     }

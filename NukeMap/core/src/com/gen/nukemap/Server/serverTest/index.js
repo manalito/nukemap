@@ -38,7 +38,7 @@ io.on('connection',function(socket){
           }
       }
   });
-  players.push(new player(socket.id,0,0));
+  players.push(new player(socket.id,64,64));
 });
 
 function player(id,x,y,state){

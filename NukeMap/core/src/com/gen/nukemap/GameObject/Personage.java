@@ -2,8 +2,12 @@ package com.gen.nukemap.GameObject;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.World;
 
 public abstract class Personage extends GameObject {
+
+    protected Body body;
     public enum STATE {FRONT, BOTTOM, LEFT, RIGHT}
 
     protected STATE state = STATE.BOTTOM; // default texture region
@@ -15,8 +19,8 @@ public abstract class Personage extends GameObject {
         super();
     }
 
-    public Personage(Vector2 position, Texture texture, float x, float y, float width, float height, int life, int onKillScore) {
-        super(position, texture, x , y, width, height);
+    public Personage(World world, Vector2 position, Texture texture, float x, float y, float width, float height, int life, int onKillScore) {
+        super(world, position, texture, x , y, width, height);
         this.life = life;
         this.onKillScore = onKillScore;
     }
@@ -60,5 +64,9 @@ public abstract class Personage extends GameObject {
 
     public void setState(STATE newState){
         state = newState;
+    }
+
+    public Body getBody(){
+        return body;
     }
 }
