@@ -3,6 +3,9 @@ var server = require ('http').Server(app);
 var io = require('socket.io')(server);
 var players = [];
 
+var ennemies = [];
+var ennemyId = 0;
+
 server.listen(8080,function(){
     console.log("Server is now running...");
 });
@@ -13,6 +16,13 @@ io.on('connection',function(socket){
     socket.emit('socketID',{id: socket.id });
     socket.emit('addOtherPlayers',players);
     socket.broadcast.emit('newPlayer', { id: socket.id });
+    socket.on('addMonsters',function(data){
+          ennemies.push(new enemy(32425, 200, 100, "FRONT"));
+          console.log("Ennemi added : " + "ID : " + "DONE");
+          socket.broadcast.emit("addMonsters",{ id: 32425, x: 200, y: 100, state: "FRONT" });
+    });
+
+    socket.broadcast.emit("addMonsters",{ id: 32425, x: 200, y: 100, state: "FRONT" });
     socket.on('playerMoved',function(data){
            data.id=socket.id;
            socket.broadcast.emit('playerMoved',data);
@@ -42,6 +52,13 @@ io.on('connection',function(socket){
 });
 
 function player(id,x,y,state){
+    this.id = id;
+    this.x = x;
+    this.y = y;
+    this.state = state;
+}
+
+function enemy(id,x,y,state){
     this.id = id;
     this.x = x;
     this.y = y;

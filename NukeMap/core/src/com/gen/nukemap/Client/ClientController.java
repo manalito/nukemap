@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
+import com.gen.nukemap.GameObject.Enemy;
 import com.gen.nukemap.GameObject.Personage;
 import com.gen.nukemap.GameObject.Player;
 import io.socket.client.IO;
@@ -34,17 +35,26 @@ public class ClientController extends ApplicationAdapter {
     private Texture bomberman1; // joueur courant
     private Texture bomberman2; // joueurs ennemis
 
+    private Texture creeperTexture;
+
+    private TextureRegion creeperFront = new TextureRegion();
+    private TextureRegion creeperBottom = new TextureRegion();
+    private TextureRegion creeperLeft = new TextureRegion();
+    private TextureRegion creeperRight = new TextureRegion();
+
     private HashMap<String,Player> autresPersonnages;
-
-
+    private HashMap<String, Enemy> enemies;
 
     public ClientController(World world){
+
         this.world = world;
         /*bomberman1 = new TextureAtlas("core/assets/bomberman.png");
         bomberman2 = new TextureAtlas("core/assets/bomberman.png");
         bomberman1Statique = new Texture(bomberman1).get*/
         bomberman1 = new Texture("bombarab.png");
         bomberman2 = new Texture("bomberman.png");
+
+        creeperTexture = new Texture("creeper.png");
 
         /* BomberMan
         bombermanFront = new TextureRegion(bomberman1,1,0,19,31);
@@ -58,9 +68,14 @@ public class ClientController extends ApplicationAdapter {
         bombermanLeft = new TextureRegion(bomberman1,0,32,31,31);
         bombermanRight = new TextureRegion(bomberman1,0,64,31,31);
 
+        creeperFront = new TextureRegion(creeperTexture,4,36,32,32);
+        creeperBottom = new TextureRegion(creeperTexture,4,4,32,32);
+        creeperLeft = new TextureRegion(creeperTexture,4,4,32,32);
+        creeperRight = new TextureRegion(creeperTexture,3,0,32,32);
+
 
         autresPersonnages = new HashMap<String, Player>();
-
+        enemies = new HashMap<String, Enemy>();
     }
 
     public void initiateConnection(Client client){
@@ -77,14 +92,18 @@ public class ClientController extends ApplicationAdapter {
     public void createMainPlayerOnConnection(){
         mainPlayer = new Player(world, new Vector2(356,400),bomberman1,0,0,48,48,3, 100);
         mainPlayer.setRegion(bombermanBottom);
-
-
     }
 
     public void createNewPlayer(String playerId){
         Player autrePerso = new Player(world, new Vector2(356,400),bomberman1,0,0,48,48,3, 100);
         autrePerso.setRegion(bombermanBottom);
         autresPersonnages.put(playerId,autrePerso);
+    }
+
+    public void createMonster(String enemyId, float x, float y, Personage.STATE state){
+        Enemy enemy = new Enemy(world, new Vector2(x, y), creeperTexture, 0, 0, 64, 64,1,10);
+        enemy.setRegion(creeperFront);
+        enemies.put(enemyId, enemy);
     }
 
     public void updateClientServer(Client client){
@@ -181,6 +200,14 @@ public class ClientController extends ApplicationAdapter {
             //autrePersonnage.getValue().getBody().setTransform(autrePersonnage.getValue().getX(), autrePersonnage.getValue().getY(), 0);
             autrePersonnage.getValue().draw(batch);
             //autrePersonnage.getValue().draw(batch,200);
+        }
+    }
+
+    public void drawEnnemies(SpriteBatch batch){
+        if(!enemies.isEmpty()) {
+            for (HashMap.Entry<String, Enemy> enemy : enemies.entrySet()) {
+                enemy.getValue().draw(batch);
+            }
         }
     }
 
