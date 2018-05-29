@@ -14,8 +14,7 @@ public class Player extends Personage {
     private Score score;
     private int bombOnField;
     private int maxBombOnField = 3;
-
-
+    private int bombRadius;
 
     public Player() {
         super();
@@ -68,9 +67,9 @@ public class Player extends Personage {
     public void updateForOtherPlayers(){
         setPosition(body.getPosition().x - this.getWidth() / 2, body.getPosition().y - this.getHeight() / 2);
     }
-    public void dropBomb() {
-
-
+    public Bomb dropBomb() {
+        Bomb bomb = new Bomb(world, position, this, bombRadius);
+        return bomb;
     }
 
     public void obtainPowerUp(PowerUp powerUp) {

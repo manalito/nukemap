@@ -10,11 +10,10 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.gen.nukemap.GameObject.Enemy;
+import com.gen.nukemap.GameObject.Bomb;
 import com.gen.nukemap.GameObject.Personage;
 import com.gen.nukemap.GameObject.Player;
-import io.socket.client.IO;
-import io.socket.client.Socket;
-
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ClientController extends ApplicationAdapter {
@@ -31,18 +30,20 @@ public class ClientController extends ApplicationAdapter {
     private TextureRegion bombermanLeft = new TextureRegion();
     private TextureRegion bombermanRight = new TextureRegion();
 
+    private TextureRegion bombFront;
+
     //private TextureAtlas bomberman2;
     private Texture bomberman1; // joueur courant
     private Texture bomberman2; // joueurs ennemis
 
     private Texture creeperTexture;
+    private HashMap<String,Player> autresPersonnages;
+    private ArrayList<Bomb> bombList;
 
     private TextureRegion creeperFront = new TextureRegion();
     private TextureRegion creeperBottom = new TextureRegion();
     private TextureRegion creeperLeft = new TextureRegion();
     private TextureRegion creeperRight = new TextureRegion();
-
-    private HashMap<String,Player> autresPersonnages;
     private HashMap<String, Enemy> enemies;
 
     public ClientController(World world){
@@ -73,7 +74,7 @@ public class ClientController extends ApplicationAdapter {
         creeperLeft = new TextureRegion(creeperTexture,4,4,32,32);
         creeperRight = new TextureRegion(creeperTexture,3,0,32,32);
 
-
+        bombList = new ArrayList<Bomb>();
         autresPersonnages = new HashMap<String, Player>();
         enemies = new HashMap<String, Enemy>();
     }
@@ -179,7 +180,8 @@ public class ClientController extends ApplicationAdapter {
                 mainPlayer.setRegion(bombermanFront);
                 mainPlayer.setState(Player.STATE.FRONT);
             } else if(Gdx.input.isKeyPressed(Input.Keys.SPACE)){
-                mainPlayer.getBody().setLinearVelocity(new Vector2(0,0));
+                // TODO drop the bomb
+                bombList.add(mainPlayer.dropBomb());
             } else{
                 mainPlayer.getBody().setLinearVelocity(new Vector2(0,0));
             }
@@ -192,6 +194,10 @@ public class ClientController extends ApplicationAdapter {
             mainPlayer.updatePlayer();
             mainPlayer.draw(batch); // dessine le bomberman en fonction du bouton appuye par l'utilisateur
         }
+    }
+
+    public void drawBomb(SpriteBatch batch){
+
     }
 
     public void drawOthersBomberman(SpriteBatch batch){

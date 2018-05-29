@@ -1,30 +1,28 @@
 package com.gen.nukemap.GameObject;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 
 public class Bomb extends GameObject {
 
     private int radius;
-    private String idPlayer = "";
+    private Player player;
+    private static Texture bombTexture = new Texture("bombs.jpg");
+    private Texture currentTexture;
+    private static int height = 32;
+    private static int width = 32;
 
     public Bomb() {
         super();
     }
 
-    public Bomb(World world, String idPlayer, Vector2 position, Texture texture, float x, float y, float width, float height, int radius) {
-        super(world, position, texture, x, y, width, height);
+    public Bomb(World world, Vector2 position, Player player, int radius) {
+        super(world, position, bombTexture, 0, 0, width, height);
         this.radius = radius;
-        this.idPlayer = idPlayer;
-
-    }
-
-    public Bomb(Bomb bomb) {
-
-        super(bomb.world, bomb.position, bomb.getTexture(), bomb.getX(), bomb.getY(), bomb.getWidth(), bomb.getWidth());
-        this.radius = bomb.radius;
-        this.idPlayer = bomb.idPlayer;
+        this.player = player;
+        currentTexture = bombTexture;
     }
 
     public int getRadius() {
@@ -35,12 +33,12 @@ public class Bomb extends GameObject {
         this.radius = radius;
     }
 
-    public String getIdPlayer() {
-        return idPlayer;
+    public Player getIdPlayer() {
+        return player;
     }
 
-    public void setIdPlayer(String idPlayer){
-        this.idPlayer = idPlayer;
+    public void setIdPlayer(Player player){
+        this.player = player;
     }
 
     public void explode() {

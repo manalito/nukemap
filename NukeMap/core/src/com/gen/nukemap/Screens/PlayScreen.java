@@ -47,7 +47,7 @@ public class PlayScreen implements Screen {
         gamePort = new FitViewport(NukeMap.V_WIDTH / NukeMap.PPM, NukeMap.V_HEIGHT / NukeMap.PPM, gamecam);
 
         mapLoader = new TmxMapLoader();
-        map = mapLoader.load("map.tmx");
+        map = mapLoader.load("map2.tmx");
         renderer = new OrthogonalTiledMapRenderer(map, 1 / NukeMap.PPM);
 
         gamecam.position.set(gamePort.getWorldWidth() / 2, gamePort.getWorldHeight() / 2,0);
