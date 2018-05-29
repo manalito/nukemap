@@ -126,3 +126,6 @@ Thumbs.db
 
 ## node js
 /node_modules/
+NukeMap/core/bin/com/gen/nukemap/Server/serverTest/node_modules/
+
+NukeMap/core/src/com/gen/nukemap/Server/serverTest/node_modules/
