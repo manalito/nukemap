@@ -14,8 +14,9 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.viewport.*;
+import com.gen.nukemap.Client.ClientController;
 import com.gen.nukemap.NukeMap;
-import com.gen.nukemap.Server.Client;
+import com.gen.nukemap.Client.Client;
 
 public class PlayScreen implements Screen {
 
@@ -29,6 +30,7 @@ public class PlayScreen implements Screen {
     private TiledMap map;
     private OrthogonalTiledMapRenderer renderer;
 
+    private ClientController clientController;
     private Client client;
 
     // Box2d variables
@@ -86,8 +88,10 @@ public class PlayScreen implements Screen {
             body.createFixture(fDef);
         }
 
-        client = new Client(world);
-        client.create();
+        clientController = new ClientController(world);
+        client = new Client(clientController);
+
+        clientController.initiateConnection(client);
     }
 
     @Override
@@ -122,10 +126,10 @@ public class PlayScreen implements Screen {
         game.batch.begin();
 
         if(client !=null){
-            client.drawBomberman(game.batch);
-            client.handleInput(Gdx.graphics.getDeltaTime());
-            client.drawOthersBomberman(game.batch);
-            client.updateClientToServer(Gdx.graphics.getDeltaTime());
+            clientController.drawBomberman(game.batch);
+            clientController.handleInput(Gdx.graphics.getDeltaTime());
+            clientController.drawOthersBomberman(game.batch);
+            clientController.updateClientServer(client);
         }
         //resize(texture.getWidth(), texture.getHeight());
         game.batch.end();

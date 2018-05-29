@@ -9,7 +9,6 @@ import com.gen.nukemap.NukeMap;
 public abstract class GameObject extends Sprite {
 
     protected Vector2 position;
-
     protected World world;
 
 
