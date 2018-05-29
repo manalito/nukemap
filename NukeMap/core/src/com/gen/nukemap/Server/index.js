@@ -22,7 +22,7 @@ io.on('connection',function(socket){
           socket.broadcast.emit("addMonsters",{ id: 32425, x: 200, y: 100, state: "FRONT" });
     });
 
-    socket.broadcast.emit("addMonsters",{ id: 32425, x: 200, y: 100, state: "FRONT" });
+    socket.emit("addMonsters",{ id: 32425, x: 200, y: 100, state: "FRONT" });
     socket.on('playerMoved',function(data){
            data.id=socket.id;
            socket.broadcast.emit('playerMoved',data);
