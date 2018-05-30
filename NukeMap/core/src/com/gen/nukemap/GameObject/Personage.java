@@ -41,6 +41,7 @@ public abstract class Personage extends GameObject {
 
         fixtureDef.shape = shape;
         fixtureDef.density = 10f;
+        //fixtureDef.isSensor = true;
 
         body.createFixture(fixtureDef);
 

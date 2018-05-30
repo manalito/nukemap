@@ -59,6 +59,17 @@ public class Client extends ApplicationAdapter {
         configSocketEvent();
     }
 
+    public void DropBombSignal(Player player){
+        JSONObject dataToSend = new JSONObject();
+        try {
+            dataToSend.put("x", player.getX());
+            dataToSend.put("y", player.getY());
+            socket.emit("bombDropped", dataToSend);
+        } catch (JSONException e) {
+            Gdx.app.log("SOCKET.IO", "Error sending JSON update Bomb to server");
+        }
+    }
+
 
     public void configSocketEvent() {
         socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
@@ -68,7 +79,8 @@ public class Client extends ApplicationAdapter {
                 clientController.createMainPlayerOnConnection();
 
             }
-        }).on("socketID", new Emitter.Listener() {
+        });
+                socket.on("socketID", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
                 JSONObject obj = (JSONObject) args[0];
@@ -79,7 +91,8 @@ public class Client extends ApplicationAdapter {
                     Gdx.app.log("SocketIO", "Error on JSON object");
                 }
             }
-        }).on("newPlayer", new Emitter.Listener() {
+        });
+                socket.on("newPlayer", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
                 JSONObject obj = (JSONObject) args[0];
@@ -93,7 +106,8 @@ public class Client extends ApplicationAdapter {
                 }
             }
 
-        }).on("playerMoved", new Emitter.Listener() {
+        });
+                socket.on("playerMoved", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
                 JSONObject dataToSend = (JSONObject) args[0];
@@ -112,9 +126,9 @@ public class Client extends ApplicationAdapter {
                 }
             }
 
-        })
+        });
 
-                .on("addOtherPlayers", new Emitter.Listener() {
+                socket.on("addOtherPlayers", new Emitter.Listener() {
                     @Override
                     public void call(Object... args) {
                         JSONArray array = (JSONArray) args[0];
@@ -131,7 +145,8 @@ public class Client extends ApplicationAdapter {
                         }
                     }
 
-                }).on("playerDisconnected", new Emitter.Listener() {
+                });
+                socket.on("playerDisconnected", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
                 JSONObject obj = (JSONObject) args[0];
@@ -144,7 +159,8 @@ public class Client extends ApplicationAdapter {
 
                 }
             }
-        }).on("addMonsters", new Emitter.Listener() {
+        });
+                socket.on("addMonsters", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
                 JSONObject obj =(JSONObject) args[0];
@@ -165,8 +181,24 @@ public class Client extends ApplicationAdapter {
 
         });
 
+        socket.on("bombok", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                JSONObject obj =(JSONObject) args[0];
+                try{
+                    String idBomb = obj.getString("id");
+                    Double x = obj.getDouble("x");
+                    Double y = obj.getDouble("y");
+                    Gdx.app.log("SocketIO","Bomb dropped: " + idBomb);
+                    Gdx.app.log("Bomb",idBomb + x + y);
 
+                    clientController.createBomb(idBomb, x.floatValue(), y.floatValue());
+                }catch (JSONException e){
+                    Gdx.app.log("SocketIO","Error getting monsters ID");
 
+                }
+            }
 
+        });
     }
 }
