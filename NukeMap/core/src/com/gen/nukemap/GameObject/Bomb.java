@@ -22,7 +22,7 @@ public class Bomb extends GameObject {
         super(world, position, bombTexture, 0, 0, width, height);
         this.radius = radius;
         this.player = player;
-        setPosition(position.x-0.1f, position.y);
+        setPosition(position.x-0.1f, position.y-0.12f);
         currentTexture = bombTexture;
     }
 

@@ -147,7 +147,12 @@ public class ClientController extends ApplicationAdapter {
     public void handleInput(float delta){
         if (mainPlayer != null) {
 
-            if(Gdx.input.isKeyPressed(Input.Keys.LEFT) && mainPlayer.getBody().getLinearVelocity().x >= -3.1f){
+             if(Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+                 // TODO drop the bomb
+                 mainPlayer.getBody().setLinearVelocity(new Vector2(0,0));
+                 bombList.add(mainPlayer.dropBomb());
+             }
+            else if(Gdx.input.isKeyPressed(Input.Keys.LEFT) && mainPlayer.getBody().getLinearVelocity().x >= -3.1f){
                 //mainPlayer.getBody().setTransform( mainPlayer.getX(), mainPlayer.getY(),0 );
                 //mainPlayer.getBody().setLinearVelocity(new Vector2(-100f, 0));
                 mainPlayer.setPosition(mainPlayer.getX() - (delta * 1), mainPlayer.getY());
@@ -179,9 +184,6 @@ public class ClientController extends ApplicationAdapter {
                 mainPlayer.setPosition(mainPlayer.getX() , mainPlayer.getY() - (delta * 1));
                 mainPlayer.setRegion(bombermanFront);
                 mainPlayer.setState(Player.STATE.FRONT);
-            } else if(Gdx.input.isKeyPressed(Input.Keys.SPACE)){
-                // TODO drop the bomb
-                bombList.add(mainPlayer.dropBomb());
             } else{
                 mainPlayer.getBody().setLinearVelocity(new Vector2(0,0));
             }
