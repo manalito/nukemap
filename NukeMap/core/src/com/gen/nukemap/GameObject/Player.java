@@ -37,28 +37,7 @@ public class Player extends Personage {
         this.score = new Score(score);
     }
 
-    public void createBody(){
 
-        BodyDef bodyDef = new BodyDef();
-
-        bodyDef.type = BodyDef.BodyType.DynamicBody;
-
-        bodyDef.position.set(getX(), getY());
-
-        body = world.createBody(bodyDef);
-
-        CircleShape shape = new CircleShape();
-        shape.setRadius(getWidth() / 4f + getHeight() / 4f);
-
-        FixtureDef fixtureDef = new FixtureDef();
-
-        fixtureDef.shape = shape;
-        fixtureDef.density = 10f;
-
-        body.createFixture(fixtureDef);
-
-        shape.dispose();
-    }
 
     public void updatePlayer(){
         setPosition(body.getPosition().x - this.getWidth() / 2, body.getPosition().y - this.getHeight() / 2);

@@ -102,7 +102,7 @@ public class ClientController extends ApplicationAdapter {
     }
 
     public void createMonster(String enemyId, float x, float y, Personage.STATE state){
-        Enemy enemy = new Enemy(world, new Vector2(x, y), creeperTexture, 0, 0, 64, 64,1,10);
+        Enemy enemy = new Enemy(world, new Vector2(x, y), creeperTexture, 0, 0, 54, 54,1,10);
         enemy.setRegion(creeperFront);
         enemies.put(enemyId, enemy);
     }
@@ -212,6 +212,7 @@ public class ClientController extends ApplicationAdapter {
     public void drawEnnemies(SpriteBatch batch){
         if(!enemies.isEmpty()) {
             for (HashMap.Entry<String, Enemy> enemy : enemies.entrySet()) {
+                enemy.getValue().updateEnemy();
                 enemy.getValue().draw(batch);
             }
         }

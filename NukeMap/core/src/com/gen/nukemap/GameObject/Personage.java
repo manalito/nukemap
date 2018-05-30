@@ -2,8 +2,7 @@ package com.gen.nukemap.GameObject;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.*;
 
 public abstract class Personage extends GameObject {
 
@@ -23,6 +22,29 @@ public abstract class Personage extends GameObject {
         super(world, position, texture, x , y, width, height);
         this.life = life;
         this.onKillScore = onKillScore;
+    }
+
+    public void createBody(){
+
+        BodyDef bodyDef = new BodyDef();
+
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
+
+        bodyDef.position.set(getX(), getY());
+
+        body = world.createBody(bodyDef);
+
+        CircleShape shape = new CircleShape();
+        shape.setRadius(getWidth() / 4f + getHeight() / 4f);
+
+        FixtureDef fixtureDef = new FixtureDef();
+
+        fixtureDef.shape = shape;
+        fixtureDef.density = 10f;
+
+        body.createFixture(fixtureDef);
+
+        shape.dispose();
     }
 
     public int getLife() {
