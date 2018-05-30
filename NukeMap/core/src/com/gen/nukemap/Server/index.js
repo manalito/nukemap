@@ -38,6 +38,14 @@ io.on('connection',function(socket){
            }*/
 
     });
+        socket.on('bombDropped',function(data){
+
+                   data.id=socket.id;
+                   socket.broadcast.emit('bombDropped',data);
+
+                    console.log("Bomb dropped : " + "ID : " + data.id + "X: " + data.x + "Y: " + data.y);
+
+            });
 
   socket.on('disconnect',function(){
     console.log("Player is disconnected");
