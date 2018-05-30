@@ -15,6 +15,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.viewport.*;
 import com.gen.nukemap.Client.ClientController;
+import com.gen.nukemap.GameObject.WorldContactListener;
 import com.gen.nukemap.NukeMap;
 import com.gen.nukemap.Client.Client;
 
@@ -54,6 +55,8 @@ public class PlayScreen implements Screen {
 
         world = new World(new Vector2(0,0), true);
         b2dr = new Box2DDebugRenderer();
+
+        world.setContactListener(new WorldContactListener());
 
         BodyDef bDef = new BodyDef();
         PolygonShape shape = new PolygonShape();
