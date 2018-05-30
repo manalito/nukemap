@@ -217,9 +217,10 @@ public class ClientController extends ApplicationAdapter {
     }
 
     public void drawBomb(SpriteBatch batch){
-        if(!bombList.isEmpty()){
-            for(int i = 0; i < bombList.size(); ++i) {
+        if(!bombList.isEmpty()) {
+            for (int i = 0; i < bombList.size(); ++i) {
                 bombList.get(i).draw(batch);
+                bombList.get(i).updatePosition();
             }
         }
     }

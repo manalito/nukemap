@@ -200,10 +200,5 @@ public class Client extends ApplicationAdapter {
             }
 
         });
-
-
-
-
-
     }
 }
