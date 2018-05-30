@@ -6,10 +6,6 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.gen.nukemap.Screens.*;
 
-<<<<<<< HEAD
-=======
-
->>>>>>> b78082f983e1b173ace709c851cbf374355f36de
 public class NukeMap extends Game {
     public static final int V_WIDTH = 960;
     public static final int V_HEIGHT = 704;
