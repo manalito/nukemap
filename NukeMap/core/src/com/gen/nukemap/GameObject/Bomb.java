@@ -24,7 +24,11 @@ public class Bomb extends GameObject {
         this.radius = radius;
         this.player = player;
         setPosition(position.x-0.1f, position.y-0.12f);
-        //currentTexture = bombTexture;
+        createBody();
+    }
+    
+    public void updatePosition() {
+        setPosition(body.getPosition().x - this.getWidth() / 2, body.getPosition().y - this.getHeight() / 2);
     }
 
     public void createBody(){
