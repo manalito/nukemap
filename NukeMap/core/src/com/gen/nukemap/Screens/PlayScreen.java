@@ -91,6 +91,7 @@ public class PlayScreen implements Screen {
         clientController = new ClientController(world);
         client = new Client(clientController);
 
+        clientController.setClient(client);
         clientController.initiateConnection(client);
     }
 
@@ -145,8 +146,6 @@ public class PlayScreen implements Screen {
         //gamecam.update();
 
     }
-
-
 
     @Override
     public void pause() {

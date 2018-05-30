@@ -22,6 +22,7 @@ public class ClientController extends ApplicationAdapter {
     private static int nbPlayers = 0;
     private Player mainPlayer;
     private World world;
+    private Client client;
 
     private boolean connectedToGame = false;
 
@@ -37,6 +38,8 @@ public class ClientController extends ApplicationAdapter {
     private Texture bomberman2; // joueurs ennemis
 
     private Texture creeperTexture;
+    private Texture bombTexture;
+
     private HashMap<String,Player> autresPersonnages;
     private ArrayList<Bomb> bombList;
 
@@ -56,6 +59,8 @@ public class ClientController extends ApplicationAdapter {
         bomberman2 = new Texture("bomberman.png");
 
         creeperTexture = new Texture("creeper.png");
+
+        bombTexture = new Texture("bomb.png");
 
         /* BomberMan
         bombermanFront = new TextureRegion(bomberman1,1,0,19,31);
@@ -90,6 +95,9 @@ public class ClientController extends ApplicationAdapter {
 
     }
 
+    public void setClient(Client c){
+        client = c;
+    }
     public void createMainPlayerOnConnection(){
         mainPlayer = new Player(world, new Vector2(356,400),bomberman1,0,0,48,48,3, 100);
         mainPlayer.setRegion(bombermanBottom);
@@ -143,14 +151,24 @@ public class ClientController extends ApplicationAdapter {
         autresPersonnages.put(playerId,ennemi);
     }
 
+    public void createBomb(String bombId, float x, float y){
+        // TODO change player attribution
+
+        //bombList.add(mainPlayer.dropBomb());
+        Bomb bomb = new Bomb(world, new Vector2(x, y), bombTexture, mainPlayer, mainPlayer.getBombRadius());
+        //bomb.setRegion(bomb.getTexture());
+        bombList.add(bomb);
+    }
 
     public void handleInput(float delta){
         if (mainPlayer != null) {
 
-             if(Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+             if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
                  // TODO drop the bomb
                  mainPlayer.getBody().setLinearVelocity(new Vector2(0,0));
-                 bombList.add(mainPlayer.dropBomb());
+                 // bombList.add(mainPlayer.dropBomb());
+                 client.DropBombSignal(mainPlayer);
+
              }
             else if(Gdx.input.isKeyPressed(Input.Keys.LEFT) && mainPlayer.getBody().getLinearVelocity().x >= -3.1f){
                 //mainPlayer.getBody().setTransform( mainPlayer.getX(), mainPlayer.getY(),0 );
@@ -199,8 +217,10 @@ public class ClientController extends ApplicationAdapter {
     }
 
     public void drawBomb(SpriteBatch batch){
-        for(Bomb b : bombList){
-            b.draw(batch);
+        if(!bombList.isEmpty()){
+            for(int i = 0; i < bombList.size(); ++i) {
+                bombList.get(i).draw(batch);
+            }
         }
     }
 

@@ -41,9 +41,9 @@ io.on('connection',function(socket){
         socket.on('bombDropped',function(data){
 
                    data.id=socket.id;
-                   socket.broadcast.emit('bombDropped',data);
-
-                    console.log("Bomb dropped : " + "ID : " + data.id + "X: " + data.x + "Y: " + data.y);
+                   socket.broadcast.emit('bombok',data);
+                   socket.emit('bombok', data);
+                   console.log("Bomb dropped : " + "ID : " + data.id + "X: " + data.x + "Y: " + data.y);
 
             });
 
