@@ -9,7 +9,7 @@ public class Bomb extends GameObject {
 
     private int radius;
     private Player player;
-    private static Texture bombTexture = new Texture("bombs.jpg");
+    private static Texture bombTexture = new Texture("bomb.png");
     private Texture currentTexture;
     private static int height = 32;
     private static int width = 32;
@@ -22,6 +22,7 @@ public class Bomb extends GameObject {
         super(world, position, bombTexture, 0, 0, width, height);
         this.radius = radius;
         this.player = player;
+        setPosition(position.x-0.1f, position.y);
         currentTexture = bombTexture;
     }
 

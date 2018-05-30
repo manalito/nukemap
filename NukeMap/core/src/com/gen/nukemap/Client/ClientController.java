@@ -197,7 +197,9 @@ public class ClientController extends ApplicationAdapter {
     }
 
     public void drawBomb(SpriteBatch batch){
-
+        for(Bomb b : bombList){
+            b.draw(batch);
+        }
     }
 
     public void drawOthersBomberman(SpriteBatch batch){

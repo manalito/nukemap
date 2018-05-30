@@ -47,7 +47,7 @@ public class Player extends Personage {
         setPosition(body.getPosition().x - this.getWidth() / 2, body.getPosition().y - this.getHeight() / 2);
     }
     public Bomb dropBomb() {
-        Bomb bomb = new Bomb(world, position, this, bombRadius);
+        Bomb bomb = new Bomb(world, body.getPosition(), this, bombRadius);
         return bomb;
     }
 

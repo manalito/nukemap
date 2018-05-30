@@ -126,6 +126,7 @@ public class PlayScreen implements Screen {
         game.batch.begin();
 
         if(client !=null){
+            clientController.drawBomb(game.batch);
             clientController.drawBomberman(game.batch);
             clientController.handleInput(Gdx.graphics.getDeltaTime());
             clientController.drawOthersBomberman(game.batch);
