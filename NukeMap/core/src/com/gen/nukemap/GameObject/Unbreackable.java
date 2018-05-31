@@ -8,11 +8,11 @@ import com.badlogic.gdx.physics.box2d.World;
 
 public class Unbreackable extends InteractiveTileObject {
 
-    private Fixture fixture;
+    //private Fixture fixture;
 
     public Unbreackable(World world, TiledMap map, Rectangle bounds) {
         super(world, map, bounds);
-        fixture.setUserData(this);
+        //fixture.setUserData(this);
     }
 
     @Override

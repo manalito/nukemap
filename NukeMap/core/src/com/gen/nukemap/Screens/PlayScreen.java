@@ -18,6 +18,7 @@ import com.gen.nukemap.Client.ClientController;
 import com.gen.nukemap.GameObject.WorldContactListener;
 import com.gen.nukemap.NukeMap;
 import com.gen.nukemap.Client.Client;
+import com.gen.nukemap.Tools.B2drWorldCreator;
 
 public class PlayScreen implements Screen {
 
@@ -58,38 +59,8 @@ public class PlayScreen implements Screen {
 
         world.setContactListener(new WorldContactListener());
 
-        BodyDef bDef = new BodyDef();
-        PolygonShape shape = new PolygonShape();
-        FixtureDef fDef = new FixtureDef();
-        Body body;
 
-        // Unbreakable objects
-        for(MapObject object : map.getLayers().get(2).getObjects().getByType(RectangleMapObject.class)){
-            Rectangle rect = ((RectangleMapObject) object).getRectangle();
-
-            bDef.type = BodyDef.BodyType.StaticBody;
-            bDef.position.set((rect.getX() + rect.getWidth() / 2) / NukeMap.PPM, (rect.getY() + rect.getHeight() / 2) / NukeMap.PPM);
-
-            body = world.createBody(bDef);
-            shape.setAsBox(rect.getWidth() / 2 / NukeMap.PPM, rect.getHeight() / 2  / NukeMap.PPM);
-            fDef.shape = shape;
-
-            body.createFixture(fDef);
-        }
-
-        // Breakable objects
-        for(MapObject object : map.getLayers().get(3).getObjects().getByType(RectangleMapObject.class)){
-            Rectangle rect = ((RectangleMapObject) object).getRectangle();
-
-            bDef.type = BodyDef.BodyType.StaticBody;
-            bDef.position.set((rect.getX() + rect.getWidth() / 2) / NukeMap.PPM, (rect.getY() + rect.getHeight() / 2) / NukeMap.PPM);
-
-            body = world.createBody(bDef);
-            shape.setAsBox(rect.getWidth() / 2 / NukeMap.PPM, rect.getHeight() / 2 / NukeMap.PPM);
-            fDef.shape = shape;
-
-            body.createFixture(fDef);
-        }
+        new B2drWorldCreator(world, map);
 
         clientController = new ClientController(world);
         client = new Client(clientController);
@@ -167,6 +138,9 @@ public class PlayScreen implements Screen {
 
     @Override
     public void dispose() {
-
+        map.dispose();
+        renderer.dispose();
+        world.dispose();
+        b2dr.dispose();
     }
 }
