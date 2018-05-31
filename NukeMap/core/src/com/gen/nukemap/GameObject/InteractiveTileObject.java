@@ -17,6 +17,8 @@ public abstract class InteractiveTileObject extends MapObject {
     protected Rectangle bounds;
     protected Body body;
 
+    protected Fixture fixture;
+
     public InteractiveTileObject(World world, TiledMap map, Rectangle bounds){
 
         this.world = world;
@@ -33,11 +35,7 @@ public abstract class InteractiveTileObject extends MapObject {
         body = world.createBody(bDef);
         shape.setAsBox(bounds.getWidth() / 2 / NukeMap.PPM, bounds.getHeight() / 2  / NukeMap.PPM);
         fDef.shape = shape;
-
-        body.createFixture(fDef);
-
-
-        //fixture.setUserData(this);
+        fixture = body.createFixture(fDef);
     }
 
     public void setCategoryFilter(short filterBit){

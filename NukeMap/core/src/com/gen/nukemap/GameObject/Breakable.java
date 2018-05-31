@@ -10,7 +10,7 @@ public class Breakable extends InteractiveTileObject{
 
   public Breakable(World world, TiledMap map, Rectangle bounds){
     super(world, map, bounds);
-
+    fixture.setUserData("breakable");
     setCategoryFilter(NukeMap.BREAK_BIT);
   }
 
