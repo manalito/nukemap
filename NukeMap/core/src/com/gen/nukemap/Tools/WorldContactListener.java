@@ -1,7 +1,8 @@
-package com.gen.nukemap.GameObject;
+package com.gen.nukemap.Tools;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.physics.box2d.*;
+import com.gen.nukemap.GameObject.Breakable;
 
 public class WorldContactListener implements ContactListener {
     /**
@@ -21,8 +22,8 @@ public class WorldContactListener implements ContactListener {
             Fixture shape = (fixA.getUserData() == "shape") ? fixA : fixB;
             Fixture object = (shape == fixA) ? fixB : fixA ;
 
-            if(object.getUserData() != null && InteractiveTileObject.class.isAssignableFrom(object.getUserData().getClass())){
-                ((InteractiveTileObject)object.getUserData()).onBombExplode();
+            if(object.getUserData() != null && Breakable.class.isAssignableFrom(object.getUserData().getClass())){
+                ((Breakable)object.getUserData()).onBombExplode();
             }
         }
     }

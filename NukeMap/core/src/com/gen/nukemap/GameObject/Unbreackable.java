@@ -14,10 +14,4 @@ public class Unbreackable extends InteractiveTileObject {
         setCategoryFilter(NukeMap.UNBREAK_BIT);
 
     }
-
-    @Override
-    public void onBombExplode() {
-        Gdx.app.log("Try to Break Wall Brick", "No Explosion");
-        setCategoryFilter(NukeMap.DEFAULT_BIT);
-    }
 }

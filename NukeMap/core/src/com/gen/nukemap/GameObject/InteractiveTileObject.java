@@ -40,8 +40,6 @@ public abstract class InteractiveTileObject extends MapObject {
         //fixture.setUserData(this);
     }
 
-
-    public abstract void onBombExplode();
     public void setCategoryFilter(short filterBit){
         Filter filter = new Filter();
         filter.categoryBits = filterBit;
