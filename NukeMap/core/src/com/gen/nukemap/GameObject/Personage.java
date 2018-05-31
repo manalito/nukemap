@@ -3,6 +3,7 @@ package com.gen.nukemap.GameObject;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.gen.nukemap.NukeMap;
 
 public abstract class Personage extends GameObject {
 
@@ -41,9 +42,19 @@ public abstract class Personage extends GameObject {
 
         fixtureDef.shape = shape;
         fixtureDef.density = 10f;
-        //fixtureDef.isSensor = true;
-
         body.createFixture(fixtureDef);
+
+        // TEST
+
+        fixtureDef.filter.categoryBits = NukeMap.BOMB_BIT;
+        fixtureDef.filter.maskBits = NukeMap.DEFAULT_BIT | NukeMap.UNBREAK_BIT | NukeMap.BREAK_BIT ;
+        fixtureDef.isSensor = true;
+
+
+        body.createFixture(fixtureDef).setUserData("shape");
+
+        //TEST
+
 
         shape.dispose();
     }

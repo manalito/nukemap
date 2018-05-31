@@ -2,13 +2,14 @@ package com.gen.nukemap.GameObject;
 
 
 import com.badlogic.gdx.maps.Map;
+import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.*;
 import com.gen.nukemap.NukeMap;
 
-public abstract class InteractiveTileObject extends GameObject{
+public abstract class InteractiveTileObject extends MapObject {
 
     protected World world;
     protected Map map;
@@ -41,6 +42,9 @@ public abstract class InteractiveTileObject extends GameObject{
 
 
     public abstract void onBombExplode();
-
+    public void setCategoryFilter(short filterBit){
+        Filter filter = new Filter();
+        filter.categoryBits = filterBit;
+    }
 
 }

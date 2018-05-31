@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.gen.nukemap.NukeMap;
 
 public class Bomb extends GameObject {
 
@@ -45,6 +46,8 @@ public class Bomb extends GameObject {
         shape.setRadius(getWidth() / 4f + getHeight() / 4f);
 
         FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.filter.categoryBits = NukeMap.BOMB_BIT;
+        fixtureDef.filter.maskBits = NukeMap.DEFAULT_BIT | NukeMap.UNBREAK_BIT | NukeMap.BREAK_BIT ;
 
         fixtureDef.shape = shape;
         fixtureDef.density = 10f;

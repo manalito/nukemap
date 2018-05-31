@@ -15,6 +15,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.viewport.*;
 import com.gen.nukemap.Client.ClientController;
+import com.gen.nukemap.GameObject.Breakable;
+import com.gen.nukemap.GameObject.Unbreackable;
 import com.gen.nukemap.GameObject.WorldContactListener;
 import com.gen.nukemap.NukeMap;
 import com.gen.nukemap.Client.Client;
