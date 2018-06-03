@@ -46,11 +46,10 @@ public abstract class InteractiveTileObject extends MapObject {
         fixture.setFilterData(filter);
     }
 
+    //get correspondant cell
     public TiledMapTileLayer.Cell getCell(){
         TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayers().get(1);
-        //return layer.getCell((int) (body.getPosition().x * NukeMap.PPM / 16),(int)(body.getPosition().y * NukeMap.PPM /16));
-        return layer.getCell((int) (body.getPosition().x * NukeMap.PPM / 16),(int)(body.getPosition().y * NukeMap.PPM /16));
-
+        return layer.getCell((int) (body.getPosition().x * NukeMap.PPM / 64),(int)(body.getPosition().y * NukeMap.PPM / 64));
     }
 
 }

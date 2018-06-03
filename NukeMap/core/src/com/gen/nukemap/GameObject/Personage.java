@@ -40,14 +40,16 @@ public abstract class Personage extends GameObject {
 
         FixtureDef fixtureDef = new FixtureDef();
 
+        fixtureDef.filter.categoryBits = NukeMap.PERSO_BIT;
+        fixtureDef.filter.maskBits = NukeMap.DEFAULT_BIT | NukeMap.UNBREAK_BIT | NukeMap.BREAK_BIT;
+
+
+
         fixtureDef.shape = shape;
         fixtureDef.density = 10f;
         body.createFixture(fixtureDef);
 
         // TEST
-
-        fixtureDef.filter.categoryBits = NukeMap.BOMB_BIT;
-        fixtureDef.filter.maskBits = NukeMap.DEFAULT_BIT | NukeMap.UNBREAK_BIT | NukeMap.BREAK_BIT ;
         fixtureDef.isSensor = true;
 
 

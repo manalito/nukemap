@@ -20,14 +20,16 @@ public class B2drWorldCreator {
         // Unbreakable objects
         for(MapObject object : map.getLayers().get(2).getObjects().getByType(RectangleMapObject.class)){
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
-            new Breakable(world, map, rect);
+            new Unbreackable(world, map, rect);
         }
 
         // Breakable objects
         for(MapObject object : map.getLayers().get(3).getObjects().getByType(RectangleMapObject.class)){
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
-            new Unbreackable(world, map, rect);
+            System.out.println("Rect: x : " + rect.getX() + " y" + rect.getY());
+            Breakable b = new Breakable(world, map, rect);
+            b.onBombExplode();
         }
     }
 }

@@ -5,6 +5,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.maps.Map;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
@@ -26,7 +27,7 @@ public class PlayScreen implements Screen {
 
     // Tiled map variables
     private TmxMapLoader mapLoader;
-    private TiledMap map;
+    private static TiledMap map;
     private OrthogonalTiledMapRenderer renderer;
 
     private ClientController clientController;
@@ -35,9 +36,6 @@ public class PlayScreen implements Screen {
     // Box2d variables
     private World world;
     private Box2DDebugRenderer b2dr;
-
-
-
 
     public PlayScreen(NukeMap game){
         this.game = game;
@@ -140,4 +138,9 @@ public class PlayScreen implements Screen {
         world.dispose();
         b2dr.dispose();
     }
+
+    public static Map getMap(){
+        return map;
+    }
+
 }
