@@ -55,10 +55,8 @@ public class Bomb extends GameObject {
 
         body.setMassData(new MassData());
 
-        //body.createFixture(fixtureDef);
-
         // if a bomb explodes, all breakable object are destroyed
-        body.createFixture(fixtureDef).setUserData("shape");
+        body.createFixture(fixtureDef).setUserData("bomb");
 
         shape.dispose();
     }

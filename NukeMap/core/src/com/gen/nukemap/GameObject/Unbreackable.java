@@ -11,6 +11,7 @@ public class Unbreackable extends InteractiveTileObject {
     public Unbreackable(World world, TiledMap map, Rectangle bounds) {
         super(world, map, bounds);
 
+        fixture.setUserData("Unbreakable");
         setCategoryFilter(NukeMap.UNBREAK_BIT);
 
     }

@@ -17,6 +17,7 @@ public abstract class InteractiveTileObject extends MapObject {
     protected TiledMapTile tile;
     protected Rectangle bounds;
     protected Body body;
+
     protected Fixture fixture;
 
     public InteractiveTileObject(World world, TiledMap map, Rectangle bounds){
@@ -37,8 +38,6 @@ public abstract class InteractiveTileObject extends MapObject {
         fDef.shape = shape;
 
         fixture = body.createFixture(fDef);
-
-        //fixture.setUserData(this);
     }
 
     public void setCategoryFilter(short filterBit){
