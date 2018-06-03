@@ -59,7 +59,7 @@ public class Client extends ApplicationAdapter {
         configSocketEvent();
     }
 
-    public void DropBombSignal(Player player){
+    public void  DropBombSignal(Player player){
         JSONObject dataToSend = new JSONObject();
         try {
             dataToSend.put("x", player.getX());

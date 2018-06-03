@@ -5,6 +5,7 @@ import com.badlogic.gdx.maps.Map;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.*;
 import com.gen.nukemap.NukeMap;
@@ -16,6 +17,7 @@ public abstract class InteractiveTileObject extends MapObject {
     protected TiledMapTile tile;
     protected Rectangle bounds;
     protected Body body;
+    protected Fixture fixture;
 
     public InteractiveTileObject(World world, TiledMap map, Rectangle bounds){
 
@@ -34,8 +36,7 @@ public abstract class InteractiveTileObject extends MapObject {
         shape.setAsBox(bounds.getWidth() / 2 / NukeMap.PPM, bounds.getHeight() / 2  / NukeMap.PPM);
         fDef.shape = shape;
 
-        body.createFixture(fDef);
-
+        fixture = body.createFixture(fDef);
 
         //fixture.setUserData(this);
     }
@@ -43,6 +44,14 @@ public abstract class InteractiveTileObject extends MapObject {
     public void setCategoryFilter(short filterBit){
         Filter filter = new Filter();
         filter.categoryBits = filterBit;
+        fixture.setFilterData(filter);
+    }
+
+    public TiledMapTileLayer.Cell getCell(){
+        TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayers().get(1);
+        //return layer.getCell((int) (body.getPosition().x * NukeMap.PPM / 16),(int)(body.getPosition().y * NukeMap.PPM /16));
+        return layer.getCell((int) (body.getPosition().x * NukeMap.PPM / 16),(int)(body.getPosition().y * NukeMap.PPM /16));
+
     }
 
 }

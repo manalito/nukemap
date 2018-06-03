@@ -18,7 +18,7 @@ public class Breakable extends InteractiveTileObject{
   public void onBombExplode() {
     Gdx.app.log("Break Brick","Explosion");
     setCategoryFilter(NukeMap.DESTROYED_BIT);
-
+    getCell().setTile(null);
   }
 
 

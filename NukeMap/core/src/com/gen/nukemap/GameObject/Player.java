@@ -14,7 +14,7 @@ public class Player extends Personage {
     private Score score;
     private int bombOnField;
     private int maxBombOnField = 3;
-    private int bombRadius;
+    private int bombRadius = 2;
 
     public Player() {
         super();
