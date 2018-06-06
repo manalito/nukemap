@@ -41,7 +41,7 @@ public abstract class Personage extends GameObject {
         FixtureDef fixtureDef = new FixtureDef();
 
         fixtureDef.filter.categoryBits = NukeMap.PERSO_BIT;
-        fixtureDef.filter.maskBits = NukeMap.DEFAULT_BIT | NukeMap.UNBREAK_BIT | NukeMap.BREAK_BIT;
+        fixtureDef.filter.maskBits = NukeMap.DEFAULT_BIT | NukeMap.UNBREAK_BIT | NukeMap.BREAK_BIT | NukeMap.PERSO_BIT;
 
 
 

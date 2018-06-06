@@ -29,7 +29,7 @@ public class B2drWorldCreator {
 
             System.out.println("Rect: x : " + rect.getX() + " y" + rect.getY());
             Breakable b = new Breakable(world, map, rect);
-            b.onBombExplode();
+            //b.onBombExplode();
         }
     }
 }
