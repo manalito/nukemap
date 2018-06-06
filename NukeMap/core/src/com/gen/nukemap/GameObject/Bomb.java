@@ -54,7 +54,6 @@ public class Bomb extends GameObject {
 
         fixtureDef.shape = shape;
         fixtureDef.density = 10f;
-        fixtureDef.isSensor = true;
 
         body.setMassData(new MassData());
 
@@ -70,8 +69,20 @@ public class Bomb extends GameObject {
     }
 
     public void destroyBricks(){
+        float bombXposition = body.getPosition().x * NukeMap.PPM / 64;
+        float bombYposition = body.getPosition().y * NukeMap.PPM / 64;
         TiledMapTileLayer layer = (TiledMapTileLayer) PlayScreen.getMap().getLayers().get(1);
-        TiledMapTileLayer.Cell bombCell = layer.getCell((int) (body.getPosition().x * NukeMap.PPM / 64),(int)(body.getPosition().y * NukeMap.PPM / 64));
+
+        TiledMapTileLayer.Cell cell1 = layer.getCell((int)bombXposition + 1,(int)bombYposition);
+        //setCategoryFilter(NukeMap.DESTROYED_BIT);
+        cell1.setTile(null);
+
+        TiledMapTileLayer.Cell cell2 = layer.getCell((int)bombXposition - 1,(int)bombYposition);
+        //setCategoryFilter(NukeMap.DESTROYED_BIT);
+        cell2.setTile(null);
+
+
+
     }
 
     public int getRadius() {

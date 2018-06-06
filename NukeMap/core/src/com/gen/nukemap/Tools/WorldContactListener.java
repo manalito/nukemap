@@ -19,7 +19,7 @@ public class WorldContactListener implements ContactListener {
         Fixture fixA = contact.getFixtureA();
         Fixture fixB = contact.getFixtureB();
 
-        if(fixA.getUserData() == "bomb" || fixB.getUserData() == "breakable"){
+        /*if(fixA.getUserData() == "bomb" || fixB.getUserData() == "breakable"){
             Fixture shape = (fixA.getUserData() == "shape") ? fixA : fixB;
             Fixture object = (shape == fixA) ? fixB : fixA ;
 
@@ -29,7 +29,7 @@ public class WorldContactListener implements ContactListener {
             }
         } else{
             System.out.println("Not Bomb");
-        }
+        }*/
     }
 
     /**

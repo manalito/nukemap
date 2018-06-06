@@ -157,7 +157,9 @@ public class ClientController extends ApplicationAdapter {
         //bombList.add(mainPlayer.dropBomb());
         Bomb bomb = new Bomb(world, new Vector2(x, y), bombTexture, mainPlayer, mainPlayer.getBombRadius());
         //bomb.setRegion(bomb.getTexture());
+
         bombList.add(bomb);
+        bomb.destroyBricks();
     }
 
     public void handleInput(float delta){
