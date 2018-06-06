@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.gen.nukemap.GameObject.Enemy;
 import com.gen.nukemap.GameObject.Bomb;
@@ -110,9 +111,41 @@ public class ClientController extends ApplicationAdapter {
     }
 
     public void createMonster(String enemyId, float x, float y, Personage.STATE state){
-        Enemy enemy = new Enemy(world, new Vector2(x, y), creeperTexture, 0, 0, 54, 54,1,10);
+        Enemy enemy = new Enemy(world, new Vector2(x, y), creeperTexture, 0, 0, 54, 54,1,
+                10, enemyId);
         enemy.setRegion(creeperFront);
         enemies.put(enemyId, enemy);
+    }
+
+    public void monsterMoves(String monsterId, int direction) {
+        Enemy enemy = enemies.get(monsterId);
+        Body body = enemy.getBody();
+
+        switch(direction){
+            case 0: // UP
+                body.applyLinearImpulse(new Vector2(0, 3f), body.getWorldCenter(), true);
+                enemy.setRegion(creeperBottom);
+                enemy.setState(Enemy.STATE.BOTTOM);
+                break;
+            case 1: // LEFT
+                body.applyLinearImpulse(new Vector2(-3f, 0), body.getWorldCenter(), true);
+                enemy.setRegion(creeperLeft);
+                enemy.setState(Enemy.STATE.LEFT);
+                break;
+            case 2: // DOWN
+                body.applyLinearImpulse(new Vector2(0, -3f), body.getWorldCenter(), true);
+                enemy.setRegion(creeperFront);
+                enemy.setState(Enemy.STATE.FRONT);
+                break;
+            case 3: // RIGHT
+                body.applyLinearImpulse(new Vector2(3f, 0), body.getWorldCenter(), true);
+                enemy.setRegion(creeperRight);
+                enemy.setState(Enemy.STATE.RIGHT);
+                break;
+            default:
+                System.out.println("Error in monster direction");
+
+        }
     }
 
     public void updateClientServer(Client client){

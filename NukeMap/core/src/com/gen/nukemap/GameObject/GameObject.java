@@ -10,6 +10,7 @@ public abstract class GameObject extends Sprite {
 
     protected Vector2 position;
     protected World world;
+    protected String id;
 
 
     protected GameObject() {
