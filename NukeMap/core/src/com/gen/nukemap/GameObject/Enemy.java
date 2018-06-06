@@ -9,8 +9,10 @@ public class Enemy extends Personage {
         super();
     }
 
-    public Enemy(World world, Vector2 position, Texture texture, float x, float y, float width, float height, int life, int onKillScore) {
+    public Enemy(World world, Vector2 position, Texture texture, float x, float y, float width, float height, int life,
+                 int onKillScore, String id) {
         super(world, position, texture, x, y, width, height, life, onKillScore);
+        this.id = id;
         createBody();
     }
 

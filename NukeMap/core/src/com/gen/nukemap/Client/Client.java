@@ -199,6 +199,22 @@ public class Client extends ApplicationAdapter {
                 }
             }
 
+        }).on("enemyMoves", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                JSONObject dataReceived = (JSONObject) args[0];
+                try {
+                    String monsterID = dataReceived.getString("id");
+                    int d = dataReceived.getInt("direction");
+
+                    System.out.println("Received direction " + d + " for monster " + monsterID);
+                    clientController.monsterMoves(monsterID, d);
+                } catch (JSONException e) {
+                    Gdx.app.log("SocketIO", "Error getting player moving ID");
+
+                }
+            }
+
         });
     }
 }

@@ -2,27 +2,37 @@ var app = require('express')();
 var server = require ('http').Server(app);
 var io = require('socket.io')(server);
 var players = [];
+var sockets = [];
+const numberOfPlayers = 2;
 
-var ennemies = [];
-var ennemyId = 0;
+var enemies = [];
 
 server.listen(8080,function(){
     console.log("Server is now running...");
 });
 
+enemies.push(new enemy(32425, 200, 100, "FRONT"));
+enemies.push(new enemy(32426, 200, 200, "FRONT"));
+
 io.on('connection',function(socket){
 
   console.log("Player is Connected");
+    sockets.push(socket);
     socket.emit('socketID',{id: socket.id });
     socket.emit('addOtherPlayers',players);
     socket.broadcast.emit('newPlayer', { id: socket.id });
-    socket.on('addMonsters',function(data){
+    /*socket.on('addMonsters',function(data){
           ennemies.push(new enemy(32425, 200, 100, "FRONT"));
           console.log("Ennemi added : " + "ID : " + "DONE");
-          socket.broadcast.emit("addMonsters",{ id: 32425, x: 200, y: 100, state: "FRONT" });
-    });
+         //socket.broadcast.emit("addMonsters",{ id: 32425, x: 200, y: 100, state: "FRONT" });
+    });*/
 
-    socket.emit("addMonsters",{ id: 32425, x: 200, y: 100, state: "FRONT" });
+    for(var i = 0; i < enemies.length; i++){
+        socket.emit("addMonsters", {id: enemies[i].id, x: enemies[i].x, y: enemies[i].y, 
+            state: enemies[i].state});
+    }
+
+    //socket.emit("addMonsters",{ id: 32425, x: 200, y: 100, state: "FRONT" });
     socket.on('playerMoved',function(data){
            data.id=socket.id;
            socket.broadcast.emit('playerMoved',data);
@@ -59,6 +69,15 @@ io.on('connection',function(socket){
   players.push(new player(socket.id,64,64));
 });
 
+setInterval(function(){
+    if(players.length == numberOfPlayers){
+        for(var k = 0; k < enemies.length; k++){
+            var d = randomInt(0,3);
+            io.sockets.emit('enemyMoves', {id: enemies[k].id, direction: d});
+        }
+    }
+}, 800);
+
 function player(id,x,y,state){
     this.id = id;
     this.x = x;
@@ -72,3 +91,8 @@ function enemy(id,x,y,state){
     this.y = y;
     this.state = state;
 }
+
+function randomInt (low, high) {
+    return Math.floor(Math.random() * (high - low + 1) + low);
+}
+
