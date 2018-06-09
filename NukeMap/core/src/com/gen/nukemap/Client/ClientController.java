@@ -156,7 +156,11 @@ public class ClientController extends ApplicationAdapter {
         if (autresPersonnages.get(playerId) != null) {
 
             autresPersonnages.get(playerId).setPosition(x, y);
-            autresPersonnages.get(playerId).getBody().setTransform(x + autresPersonnages.get(playerId).getWidth() / 2, y + autresPersonnages.get(playerId).getHeight() / 2, 0);
+            try {
+                autresPersonnages.get(playerId).getBody().setTransform(x + autresPersonnages.get(playerId).getWidth() / 2, y + autresPersonnages.get(playerId).getHeight() / 2, 0);
+            } catch (Exception e){
+                e.printStackTrace();
+            }
             autresPersonnages.get(playerId).updatePlayer();
             autresPersonnages.get(playerId).setState(state); // recupere la position du state
             switch (autresPersonnages.get(playerId).getState()) {
