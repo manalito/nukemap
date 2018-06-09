@@ -39,16 +39,14 @@ io.on('connection',function(socket){
            data.id=socket.id;
            socket.broadcast.emit('playerMoved',data);
 
-            console.log("Player has moved : " + "ID : " + data.id + "X: " + data.x + "Y: " + data.y  + "State: " + data.state);
+            //console.log("Player has moved : " + "ID : " + data.id + "X: " + data.x + "Y: " + data.y  + "State: " + data.state);
 
-           /*for(var i=0; i < players.length; i++){
-                if(players.id ==data.id){
-                    players[i].x = data.x;
-                    players[i].y = data.y;
-                    //players[i].state = data.state;
-                }
-           }*/
+    });
 
+    socket.on('playerDied',function(data){
+          socket.emit('endGame',data);
+
+          console.log("Player died : ");
     });
         socket.on('bombDropped',function(data){
 

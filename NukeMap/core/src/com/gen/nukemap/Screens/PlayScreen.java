@@ -1,5 +1,6 @@
 package com.gen.nukemap.Screens;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -40,6 +41,7 @@ public class PlayScreen implements Screen {
 
     private Hud hud;
 
+
     public PlayScreen(NukeMap game){
         this.game = game;
         texture = new Texture("map.png");
@@ -55,16 +57,15 @@ public class PlayScreen implements Screen {
         world = new World(new Vector2(0,0), true);
         b2dr = new Box2DDebugRenderer();
 
-        world.setContactListener(new WorldContactListener());
-
         new B2drWorldCreator(world, map);
 
         hud = new Hud(game.batch);
 
-        clientController = new ClientController(world);
+        clientController = new ClientController(this.game, world);
         client = new Client(clientController);
-
         clientController.setClient(client);
+
+        world.setContactListener(new WorldContactListener(clientController));
         clientController.initiateConnection(client);
     }
 
@@ -113,6 +114,11 @@ public class PlayScreen implements Screen {
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
         hud.stage.draw();
 
+        if(clientController.setToScoreScreen){
+            ((Game)Gdx.app.getApplicationListener()).setScreen(new ScoreScreen(game.getMenuScreen()));
+
+        }
+
         world.step(Gdx.graphics.getDeltaTime(), 6, 2);
     }
 
@@ -150,5 +156,7 @@ public class PlayScreen implements Screen {
     public static Map getMap(){
         return map;
     }
+
+
 
 }

@@ -2,6 +2,7 @@ package com.gen.nukemap.Client;
 
 
 import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
@@ -9,11 +10,15 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.World;
 import com.gen.nukemap.GameObject.Enemy;
 import com.gen.nukemap.GameObject.Bomb;
 import com.gen.nukemap.GameObject.Personage;
 import com.gen.nukemap.GameObject.Player;
+import com.gen.nukemap.NukeMap;
+import com.gen.nukemap.Screens.ScoreScreen;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -23,16 +28,17 @@ public class ClientController extends ApplicationAdapter {
     private static int nbPlayers = 0;
     private Player mainPlayer;
     private World world;
+    private NukeMap game;
     private Client client;
 
     private boolean connectedToGame = false;
+
+    public boolean setToScoreScreen = false;
 
     private TextureRegion bombermanFront = new TextureRegion();
     private TextureRegion bombermanBottom = new TextureRegion();
     private TextureRegion bombermanLeft = new TextureRegion();
     private TextureRegion bombermanRight = new TextureRegion();
-
-    private TextureRegion bombFront;
 
     //private TextureAtlas bomberman2;
     private Texture bomberman1; // joueur courant
@@ -50,8 +56,11 @@ public class ClientController extends ApplicationAdapter {
     private TextureRegion creeperRight = new TextureRegion();
     private HashMap<String, Enemy> enemies;
 
-    public ClientController(World world){
 
+
+    public ClientController(NukeMap game, World world){
+
+        this.game = game;
         this.world = world;
         /*bomberman1 = new TextureAtlas("core/assets/bomberman.png");
         bomberman2 = new TextureAtlas("core/assets/bomberman.png");
@@ -100,19 +109,18 @@ public class ClientController extends ApplicationAdapter {
         client = c;
     }
     public void createMainPlayerOnConnection(){
-        mainPlayer = new Player(world, new Vector2(356,400),bomberman1,0,0,48,48,3, 100);
+        mainPlayer = new Player("42", world, new Vector2(356,400),bomberman1,0,0,48,48,3, 100);
         mainPlayer.setRegion(bombermanBottom);
     }
 
     public void createNewPlayer(String playerId){
-        Player autrePerso = new Player(world, new Vector2(356,400),bomberman1,0,0,48,48,3, 100);
+        Player autrePerso = new Player(playerId, world, new Vector2(356,400),bomberman1,0,0,48,48,3, 100);
         autrePerso.setRegion(bombermanBottom);
         autresPersonnages.put(playerId,autrePerso);
     }
 
     public void createMonster(String enemyId, float x, float y, Personage.STATE state){
-        Enemy enemy = new Enemy(world, new Vector2(x, y), creeperTexture, 0, 0, 54, 54,1,
-                10, enemyId);
+        Enemy enemy = new Enemy(enemyId, world, new Vector2(x, y), creeperTexture, 0, 0, 54, 54,1,10);
         enemy.setRegion(creeperFront);
         enemies.put(enemyId, enemy);
     }
@@ -184,13 +192,12 @@ public class ClientController extends ApplicationAdapter {
     }
 
     public void createOtherPlayer(String playerId){
-        Player ennemi = new Player(world, new Vector2(356,400),bomberman1,0,0,48,48,3, 100);
+        Player ennemi = new Player(playerId, world, new Vector2(356,400),bomberman1,0,0,48,48,3, 100);
         autresPersonnages.put(playerId,ennemi);
     }
 
     public void exploseBomb(int idBomb){
         for(Bomb bomb : bombList){
-            System.out.println("BombId: " + bomb.getIdBomb() + " BombIdServer: " + idBomb);
             if(bomb.getIdBomb() == idBomb){
                 bomb.destroyBricks();
             }
@@ -207,11 +214,20 @@ public class ClientController extends ApplicationAdapter {
         bombList.add(bomb); //  bomb.destroyBricks();
     }
 
+    public void handleCollision(Fixture fixture){
+        if(mainPlayer.getFixture() == fixture){
+            boolean isAlive = mainPlayer.decreaseLife();
+            if(!isAlive){
+                System.out.println("BONJOUR");
+                client.PlayerDiedSignal(mainPlayer);
+            }
+        }
+    }
+
     public void handleInput(float delta){
         if (mainPlayer != null) {
 
              if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-                 // TODO drop the bomb
                  mainPlayer.getBody().setLinearVelocity(new Vector2(0,0));
                  // bombList.add(mainPlayer.dropBomb());
                  client.DropBombSignal(mainPlayer);
@@ -292,6 +308,16 @@ public class ClientController extends ApplicationAdapter {
 
     public void removePlayer(String playerId){
         autresPersonnages.remove(playerId);
+    }
+
+    public void switchToScoreScreen(){
+        System.out.println("NEEED TO CHANGE TO scoreSCEEDS");
+        ((Game)Gdx.app.getApplicationListener()).setScreen(new ScoreScreen(game.getMenuScreen()));
+    }
+
+    public void handleEndOfGame(){
+        removePlayer(mainPlayer.getId());
+        setToScoreScreen=true;
     }
 
     @Override

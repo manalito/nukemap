@@ -1,16 +1,11 @@
 package com.gen.nukemap.Client;
 
 import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.World;
-import com.gen.nukemap.GameObject.Enemy;
 import com.gen.nukemap.GameObject.Personage;
 import com.gen.nukemap.GameObject.Player;
+import com.gen.nukemap.Screens.PlayScreen;
 import io.socket.client.*;
 import io.socket.emitter.Emitter;
 import org.json.JSONArray;
@@ -60,7 +55,7 @@ public class Client extends ApplicationAdapter {
         configSocketEvent();
     }
 
-    public void  DropBombSignal(Player player){
+    public void DropBombSignal(Player player){
         JSONObject dataToSend = new JSONObject();
         try {
             dataToSend.put("x", player.getX());
@@ -69,6 +64,11 @@ public class Client extends ApplicationAdapter {
         } catch (JSONException e) {
             Gdx.app.log("SOCKET.IO", "Error sending JSON update Bomb to server");
         }
+    }
+
+    public void PlayerDiedSignal(Player player){
+        JSONObject dataToSend = new JSONObject();
+        socket.emit("playerDied", dataToSend);
     }
 
 
@@ -200,7 +200,9 @@ public class Client extends ApplicationAdapter {
                 }
             }
 
-        }).on("enemyMoves", new Emitter.Listener() {
+        });
+
+        socket.on("enemyMoves", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
                 JSONObject dataReceived = (JSONObject) args[0];
@@ -215,7 +217,9 @@ public class Client extends ApplicationAdapter {
                 }
             }
 
-        }).on("bombExplose", new Emitter.Listener() {
+        });
+
+        socket.on("bombExplose", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
                 JSONObject dataReceived = (JSONObject) args[0];
@@ -225,6 +229,13 @@ public class Client extends ApplicationAdapter {
                 } catch (JSONException e) {
                     Gdx.app.log("SocketIO", "Error getting player moving ID");
                 }
+            }
+        });
+
+        socket.on("endGame", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                clientController.handleEndOfGame();
             }
         });
     }
