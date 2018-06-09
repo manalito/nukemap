@@ -188,15 +188,23 @@ public class ClientController extends ApplicationAdapter {
         autresPersonnages.put(playerId,ennemi);
     }
 
-    public void createBomb(String bombId, float x, float y){
+    public void exploseBomb(int idBomb){
+        for(Bomb bomb : bombList){
+            System.out.println("BombId: " + bomb.getIdBomb() + " BombIdServer: " + idBomb);
+            if(bomb.getIdBomb() == idBomb){
+                bomb.destroyBricks();
+            }
+        }
+    }
+
+    public void createBomb(int bombId, float x, float y){
         // TODO change player attribution
 
         //bombList.add(mainPlayer.dropBomb());
-        Bomb bomb = new Bomb(world, new Vector2(x, y), bombTexture, mainPlayer, mainPlayer.getBombRadius());
+        Bomb bomb = new Bomb(bombId, world, new Vector2(x, y), bombTexture, mainPlayer, mainPlayer.getBombRadius());
         //bomb.setRegion(bomb.getTexture());
 
-        bombList.add(bomb);
-        bomb.destroyBricks();
+        bombList.add(bomb); //  bomb.destroyBricks();
     }
 
     public void handleInput(float delta){

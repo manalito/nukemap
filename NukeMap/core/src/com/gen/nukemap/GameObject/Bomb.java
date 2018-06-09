@@ -21,14 +21,21 @@ public class Bomb extends GameObject {
     private static int width = 32;
     private Body body;
 
+    private static int countBombs = 0;
+
+    private int idBomb;
+
     private Fixture fixture;
 
     public Bomb() {
         super();
     }
 
-    public Bomb(World world, Vector2 position, Texture texture, Player player, int radius) {
+    public Bomb(int idBomb, World world, Vector2 position, Texture texture, Player player, int radius) {
         super(world, position,  texture, 0, 0, width, height);
+
+        this.idBomb = idBomb;
+
         this.radius = radius;
         this.player = player;
         setPosition(position.x+0.2f, position.y+0.2f);
@@ -109,6 +116,10 @@ public class Bomb extends GameObject {
 
 
 
+    }
+
+    public int getIdBomb(){
+        return idBomb;
     }
 
     public int getRadius() {

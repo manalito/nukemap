@@ -2,6 +2,7 @@ package com.gen.nukemap.Client;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -181,16 +182,16 @@ public class Client extends ApplicationAdapter {
 
         });
 
-        socket.on("bombok", new Emitter.Listener() {
+        socket.on("bombDroppedValid", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
                 JSONObject obj =(JSONObject) args[0];
                 try{
-                    String idBomb = obj.getString("id");
+                    Integer idBomb = obj.getInt("id");
                     Double x = obj.getDouble("x");
                     Double y = obj.getDouble("y");
                     Gdx.app.log("SocketIO","Bomb dropped: " + idBomb);
-                    Gdx.app.log("Bomb",idBomb + x + y);
+                    Gdx.app.log("Bomb","" + idBomb + x + y);
 
                     clientController.createBomb(idBomb, x.floatValue(), y.floatValue());
                 }catch (JSONException e){
@@ -211,10 +212,20 @@ public class Client extends ApplicationAdapter {
                     clientController.monsterMoves(monsterID, d);
                 } catch (JSONException e) {
                     Gdx.app.log("SocketIO", "Error getting player moving ID");
-
                 }
             }
 
+        }).on("bombExplose", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                JSONObject dataReceived = (JSONObject) args[0];
+                try {
+                    int idBomb = dataReceived.getInt("id");
+                    clientController.exploseBomb(idBomb);
+                } catch (JSONException e) {
+                    Gdx.app.log("SocketIO", "Error getting player moving ID");
+                }
+            }
         });
     }
 }
