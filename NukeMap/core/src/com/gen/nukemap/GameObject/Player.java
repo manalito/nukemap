@@ -12,9 +12,10 @@ import java.util.List;
 public class Player extends Personage {
 
     private Score score;
-    private int bombOnField;
+    private int bombOnField = 0;
     private int maxBombOnField = 3;
-    private int bombRadius = 2;
+
+    private int bombRadius = 1;
 
     public Player() {
         super();
@@ -26,7 +27,7 @@ public class Player extends Personage {
 
     }
 
-    public Player(Player player) {
+    public Player(Player player){
         super(player.id, player.world, player.position, player.getTexture(), player.getX(), player.getY(), player.getWidth(), player.getHeight(), player.life, player.onKillScore);
         setPlayer(player);
         createBody();
@@ -90,6 +91,23 @@ public class Player extends Personage {
 
     public int getBombRadius() {
         return bombRadius;
+    }
+
+
+
+    public int getMaxBombOnField() {
+        return maxBombOnField;
+    }
+
+    public int getBombOnField(){
+        return bombOnField;
+    }
+
+    public void increaseBombOnField(){
+        ++bombOnField;
+    }
+    public void decreaseBombOnField(){
+        --bombOnField;
     }
 
     public void obtainPowerUp(PowerUp powerUp) {

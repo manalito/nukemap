@@ -59,11 +59,11 @@ public class PlayScreen implements Screen {
 
         new B2drWorldCreator(world, map);
 
-        hud = new Hud(game.batch);
-
-        clientController = new ClientController(this.game, world);
+        clientController = new ClientController(this.game, world, this);
         client = new Client(clientController);
         clientController.setClient(client);
+
+        hud = new Hud(game.batch);
 
         world.setContactListener(new WorldContactListener(clientController));
         clientController.initiateConnection(client);
@@ -121,6 +121,12 @@ public class PlayScreen implements Screen {
 
         world.step(Gdx.graphics.getDeltaTime(), 6, 2);
     }
+
+
+    public Hud getHud(){
+        return hud;
+    }
+
 
     @Override
     public void resize(int width, int height) {

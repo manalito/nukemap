@@ -42,12 +42,21 @@ public abstract class Personage extends GameObject {
         defineFixture();
     }
 
+
+    public void destroyBody(){
+        world.destroyBody(body);
+    }
+
     public abstract void defineFixture();
 
     public abstract Fixture getFixture();
 
     public String getId(){
         return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public int getLife() {

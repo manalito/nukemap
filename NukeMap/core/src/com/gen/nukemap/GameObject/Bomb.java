@@ -89,6 +89,10 @@ public class Bomb extends GameObject {
         return getBoundingRectangle().getPosition(body.getPosition());
     }
 
+    public void destroyBody(){
+        world.destroyBody(this.body);
+    }
+
     public void destroyBricks(){
         float bombXposition = body.getPosition().x * NukeMap.PPM / 64;
         float bombYposition = body.getPosition().y * NukeMap.PPM / 64;

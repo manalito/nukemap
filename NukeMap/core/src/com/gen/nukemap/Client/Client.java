@@ -1,7 +1,7 @@
 package com.gen.nukemap.Client;
 
 import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.Game;
+
 import com.badlogic.gdx.Gdx;
 import com.gen.nukemap.GameObject.Personage;
 import com.gen.nukemap.GameObject.Player;
@@ -193,7 +193,7 @@ public class Client extends ApplicationAdapter {
                     Gdx.app.log("SocketIO","Bomb dropped: " + idBomb);
                     Gdx.app.log("Bomb","" + idBomb + x + y);
 
-                    clientController.createBomb(idBomb, x.floatValue(), y.floatValue());
+                    clientController.createBomb(idBomb, 1, x.floatValue(), y.floatValue());
                 }catch (JSONException e){
                     Gdx.app.log("SocketIO","Error getting monsters ID");
 

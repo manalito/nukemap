@@ -17,6 +17,7 @@ import com.gen.nukemap.GameObject.Bomb;
 import com.gen.nukemap.GameObject.Personage;
 import com.gen.nukemap.GameObject.Player;
 import com.gen.nukemap.NukeMap;
+import com.gen.nukemap.Screens.PlayScreen;
 import com.gen.nukemap.Screens.ScoreScreen;
 
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ public class ClientController extends ApplicationAdapter {
     private Player mainPlayer;
     private World world;
     private NukeMap game;
+    private PlayScreen playScreen;
     private Client client;
 
     private boolean connectedToGame = false;
@@ -47,7 +49,7 @@ public class ClientController extends ApplicationAdapter {
     private Texture creeperTexture;
     private Texture bombTexture;
 
-    private HashMap<String,Player> autresPersonnages;
+    private HashMap<String,Player> otherPlayers;
     private ArrayList<Bomb> bombList;
 
     private TextureRegion creeperFront = new TextureRegion();
@@ -58,10 +60,11 @@ public class ClientController extends ApplicationAdapter {
 
 
 
-    public ClientController(NukeMap game, World world){
+    public ClientController(NukeMap game, World world, PlayScreen playScreen){
 
         this.game = game;
         this.world = world;
+        this.playScreen = playScreen;
         /*bomberman1 = new TextureAtlas("core/assets/bomberman.png");
         bomberman2 = new TextureAtlas("core/assets/bomberman.png");
         bomberman1Statique = new Texture(bomberman1).get*/
@@ -90,7 +93,7 @@ public class ClientController extends ApplicationAdapter {
         creeperRight = new TextureRegion(creeperTexture,3,0,32,32);
 
         bombList = new ArrayList<Bomb>();
-        autresPersonnages = new HashMap<String, Player>();
+        otherPlayers = new HashMap<String, Player>();
         enemies = new HashMap<String, Enemy>();
     }
 
@@ -105,18 +108,27 @@ public class ClientController extends ApplicationAdapter {
 
     }
 
+    public Player getMainPlayer(){
+        return mainPlayer;
+    }
+
+
     public void setClient(Client c){
         client = c;
     }
+
+
     public void createMainPlayerOnConnection(){
         mainPlayer = new Player("42", world, new Vector2(356,400),bomberman1,0,0,48,48,3, 100);
         mainPlayer.setRegion(bombermanBottom);
+        playScreen.getHud().updateBombs(mainPlayer.getMaxBombOnField() - mainPlayer.getBombOnField());
+        playScreen.getHud().updateLife(mainPlayer.getLife());
     }
 
     public void createNewPlayer(String playerId){
         Player autrePerso = new Player(playerId, world, new Vector2(356,400),bomberman1,0,0,48,48,3, 100);
         autrePerso.setRegion(bombermanBottom);
-        autresPersonnages.put(playerId,autrePerso);
+        otherPlayers.put(playerId,autrePerso);
     }
 
     public void createMonster(String enemyId, float x, float y, Personage.STATE state){
@@ -161,28 +173,28 @@ public class ClientController extends ApplicationAdapter {
     }
 
     public void playerMoved(String playerId, float x, float y, Personage.STATE state) {
-        if (autresPersonnages.get(playerId) != null) {
+        if (otherPlayers.get(playerId) != null) {
 
-            autresPersonnages.get(playerId).setPosition(x, y);
+            otherPlayers.get(playerId).setPosition(x, y);
             try {
-                autresPersonnages.get(playerId).getBody().setTransform(x + autresPersonnages.get(playerId).getWidth() / 2, y + autresPersonnages.get(playerId).getHeight() / 2, 0);
+                otherPlayers.get(playerId).getBody().setTransform(x + otherPlayers.get(playerId).getWidth() / 2, y + otherPlayers.get(playerId).getHeight() / 2, 0);
             } catch (Exception e){
                 e.printStackTrace();
             }
-            autresPersonnages.get(playerId).updatePlayer();
-            autresPersonnages.get(playerId).setState(state); // recupere la position du state
-            switch (autresPersonnages.get(playerId).getState()) {
+            otherPlayers.get(playerId).updatePlayer();
+            otherPlayers.get(playerId).setState(state); // recupere la position du state
+            switch (otherPlayers.get(playerId).getState()) {
                 case LEFT:
-                    autresPersonnages.get(playerId).setRegion(bombermanLeft);
+                    otherPlayers.get(playerId).setRegion(bombermanLeft);
                     break;
                 case RIGHT:
-                    autresPersonnages.get(playerId).setRegion(bombermanRight);
+                    otherPlayers.get(playerId).setRegion(bombermanRight);
                     break;
                 case FRONT:
-                    autresPersonnages.get(playerId).setRegion(bombermanFront);
+                    otherPlayers.get(playerId).setRegion(bombermanFront);
                     break;
                 case BOTTOM:
-                    autresPersonnages.get(playerId).setRegion(bombermanBottom);
+                    otherPlayers.get(playerId).setRegion(bombermanBottom);
                     break;
                 default:
                     System.out.println("COUCOZC SWITCH");
@@ -193,24 +205,62 @@ public class ClientController extends ApplicationAdapter {
 
     public void createOtherPlayer(String playerId){
         Player ennemi = new Player(playerId, world, new Vector2(356,400),bomberman1,0,0,48,48,3, 100);
-        autresPersonnages.put(playerId,ennemi);
+        otherPlayers.put(playerId,ennemi);
     }
 
     public void exploseBomb(int idBomb){
         for(Bomb bomb : bombList){
             if(bomb.getIdBomb() == idBomb){
+
+                try {
+                    for (HashMap.Entry<String, Enemy> enemy : enemies.entrySet()) {
+                        if (enemy.getValue().getBody().getPosition().dst(bomb.getPosition()) <= bomb.getRadius()) {
+                            enemy.getValue().destroyBody();
+                            enemies.remove(enemy.getKey());
+                        }
+                    }
+                } catch (Exception e){
+                    System.out.println("error remove enemy");
+                }
+                try {
+                    for (HashMap.Entry<String, Player> player : otherPlayers.entrySet()) {
+                        if (player.getValue().getBody().getPosition().dst(bomb.getPosition()) <= bomb.getRadius()) {
+                            player.getValue().destroyBody();
+                            otherPlayers.remove(player.getKey());
+                        }
+                    }
+                } catch (Exception e){
+                    System.out.println("error remove player");
+                }
+
+
+                if(mainPlayer.getBody().getPosition().dst(bomb.getPosition()) <= bomb.getRadius()){
+                    mainPlayer.destroyBody();
+                    setToScoreScreen = true;
+                }
+
+                if(bomb.getIdPlayer().equals(mainPlayer)){
+                    mainPlayer.decreaseBombOnField();
+                    playScreen.getHud().updateBombs(mainPlayer.getMaxBombOnField()-mainPlayer.getBombOnField());
+                }
+
                 bomb.destroyBricks();
+                bomb.destroyBody();
+                bombList.remove(bomb);
+                break;
             }
         }
     }
 
-    public void createBomb(int bombId, float x, float y){
+    public void createBomb(int bombId, int playerId, float x, float y){
         // TODO change player attribution
 
-        //bombList.add(mainPlayer.dropBomb());
         Bomb bomb = new Bomb(bombId, world, new Vector2(x, y), bombTexture, mainPlayer, mainPlayer.getBombRadius());
         //bomb.setRegion(bomb.getTexture());
-
+        if(bomb.getIdPlayer().equals(mainPlayer)){
+            mainPlayer.increaseBombOnField();
+            playScreen.getHud().updateBombs(mainPlayer.getMaxBombOnField() - mainPlayer.getBombOnField());
+        }
         bombList.add(bomb); //  bomb.destroyBricks();
     }
 
@@ -218,9 +268,9 @@ public class ClientController extends ApplicationAdapter {
         if(mainPlayer.getFixture() == fixture){
             boolean isAlive = mainPlayer.decreaseLife();
             if(!isAlive){
-                System.out.println("BONJOUR");
                 client.PlayerDiedSignal(mainPlayer);
             }
+            playScreen.getHud().updateLife(mainPlayer.getLife());
         }
     }
 
@@ -230,7 +280,9 @@ public class ClientController extends ApplicationAdapter {
              if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
                  mainPlayer.getBody().setLinearVelocity(new Vector2(0,0));
                  // bombList.add(mainPlayer.dropBomb());
-                 client.DropBombSignal(mainPlayer);
+                 if(mainPlayer.getBombOnField() < mainPlayer.getMaxBombOnField()){
+                      client.DropBombSignal(mainPlayer);
+                 }
 
              }
             else if(Gdx.input.isKeyPressed(Input.Keys.LEFT) && mainPlayer.getBody().getLinearVelocity().x >= -3.1f){
@@ -289,7 +341,7 @@ public class ClientController extends ApplicationAdapter {
     }
 
     public void drawOthersBomberman(SpriteBatch batch){
-        for(HashMap.Entry<String,Player> autrePersonnage : autresPersonnages.entrySet()){
+        for(HashMap.Entry<String,Player> autrePersonnage : otherPlayers.entrySet()){
             autrePersonnage.getValue().updatePlayer();
             //autrePersonnage.getValue().getBody().setTransform(autrePersonnage.getValue().getX(), autrePersonnage.getValue().getY(), 0);
             autrePersonnage.getValue().draw(batch);
@@ -306,8 +358,9 @@ public class ClientController extends ApplicationAdapter {
         }
     }
 
+
     public void removePlayer(String playerId){
-        autresPersonnages.remove(playerId);
+        otherPlayers.remove(playerId);
     }
 
     public void switchToScoreScreen(){
