@@ -151,10 +151,10 @@ public class MenuScreen implements Screen{
             }
         });
 
-        menuTable.add(playButton).pad(10);;
+        menuTable.add(playButton).pad(10);
         menuTable.row();
 
-        menuTable.add(scoreButton).pad(60);;
+        menuTable.add(scoreButton).pad(60);
         menuTable.row();
         menuTable.add(quitButton);
         stage.addActor(menuTable);

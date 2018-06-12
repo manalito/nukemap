@@ -134,7 +134,7 @@ public class Bomb extends GameObject {
         this.radius = radius;
     }
 
-    public Player getIdPlayer() {
+    public Player getPlayer() {
         return player;
     }
 

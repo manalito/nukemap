@@ -4,12 +4,16 @@ public class Score {
   public Score(){
   
   }
-  public Score(String username, long score){
+  public Score(String username, int score){
     this.username = username;
     this.score = score;
   }
+  public Score(int score){
+    this.username = "";
+    this.score = score;
+  }
   private String username;
-  private long score;
+  private int score;
   
   public Score(Score score) {
     this.score = score.score;
@@ -24,15 +28,15 @@ public class Score {
     this.username = username;
   }
   
-  public long getScore() {
+  public int getScoreValue() {
     return score;
   }
   
-  public void setScore(long score) {
+  public void setScore(int score) {
     this.score = score;
   }
   
-  public void addScore(long score){
+  public void addScore(int score){
     this.score += score;
   }
 }

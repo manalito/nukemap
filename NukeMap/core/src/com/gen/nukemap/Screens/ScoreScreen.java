@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.loaders.AssetLoader;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -74,17 +75,18 @@ public class ScoreScreen implements Screen{
         //Set table to fill stage
         menuTable.setFillParent(true);
         //Set alignment of contents in the table.
-        menuTable.center();
+        menuTable.left();
 
 
 
         ImageButton backToMenu = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture("quitbtn.jpg"))));
 
-        Label  scoresLabel = new Label("Scores", new Label.LabelStyle(new BitmapFont(), Color.BLACK));
+        Label  scoresLabel = new Label("Scores", new Label.LabelStyle(new BitmapFont(Gdx.files.internal("nukemap-ubuntu-font2.fnt")), Color.BLACK));
 
+        scoresLabel.setScale(10);
         Label  scoreClient1Label = new Label("Score player 1", new Label.LabelStyle(new BitmapFont(), Color.BLACK));
         Label scoreClient1Value  = new Label(String.format("%04d",scores[0]), new Label.LabelStyle(new BitmapFont(), Color.BLACK));
-        scoreClient1Label.setScale(100,100);
+        //scoreClient1Label.setFontScale(10,10);
 
         Label  scoreClient2Label = new Label("Score player 2", new Label.LabelStyle(new BitmapFont(), Color.BLACK));
         Label scoreClient2Value  = new Label(String.format("%04d",scores[1]), new Label.LabelStyle(new BitmapFont(), Color.BLACK));
@@ -130,7 +132,7 @@ public class ScoreScreen implements Screen{
         menuTable.add(scoreClient4Value).padTop(10);
         menuTable.row();
 
-        menuTable.add(backToMenu);
+        menuTable.add(backToMenu).padTop(60);
         menuTable.row();
         stage.addActor(menuTable);
 
@@ -142,7 +144,7 @@ public class ScoreScreen implements Screen{
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         batch.begin();
-        batch.draw(background,0,0,stage.getWidth() , stage.getWidth());
+        batch.draw(background,0,0,stage.getWidth(), stage.getWidth());
 
         batch.end();
         stage.act();

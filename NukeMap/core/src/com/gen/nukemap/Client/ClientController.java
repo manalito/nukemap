@@ -26,14 +26,14 @@ import java.util.HashMap;
 public class ClientController extends ApplicationAdapter {
 
     private static final int MAX_PLAYERS = 4;
-    private static int nbPlayers = 0;
+    private static int nbPlayersConnected = 0;
     private Player mainPlayer;
     private World world;
     private NukeMap game;
     private PlayScreen playScreen;
     private Client client;
 
-    private boolean connectedToGame = false;
+    private boolean isConnected = false;
 
     public boolean setToScoreScreen = false;
 
@@ -99,13 +99,15 @@ public class ClientController extends ApplicationAdapter {
 
     public void initiateConnection(Client client){
 
-        if(nbPlayers == (MAX_PLAYERS - 1)){
-            System.out.println("We're sorry, already four players are connected to the game ! ");
-        }else {
-            client.connectToServer();
-            ++nbPlayers;
-        }
 
+            client.connectToServer();
+            client.getNumberOfConnectedPlayers();
+
+            isConnected = true;
+    }
+
+    public void updateNbPlayersConnected(int nbPlayersConnected){
+        ClientController.nbPlayersConnected = nbPlayersConnected;
     }
 
     public Player getMainPlayer(){
@@ -118,8 +120,8 @@ public class ClientController extends ApplicationAdapter {
     }
 
 
-    public void createMainPlayerOnConnection(){
-        mainPlayer = new Player("42", world, new Vector2(356,400),bomberman1,0,0,48,48,3, 100);
+    public void createMainPlayerOnConnection(String idPlayer){
+        mainPlayer = new Player(idPlayer, world, new Vector2(356,400),bomberman1,0,0,48,48,3, 100);
         mainPlayer.setRegion(bombermanBottom);
         playScreen.getHud().updateBombs(mainPlayer.getMaxBombOnField() - mainPlayer.getBombOnField());
         playScreen.getHud().updateLife(mainPlayer.getLife());
@@ -172,12 +174,20 @@ public class ClientController extends ApplicationAdapter {
         client.updateClientToServer(Gdx.graphics.getDeltaTime(), mainPlayer);
     }
 
-    public void playerMoved(String playerId, float x, float y, Personage.STATE state) {
+    public void playerMoved(final String playerId, final float x, final float y, Personage.STATE state) {
         if (otherPlayers.get(playerId) != null) {
 
             otherPlayers.get(playerId).setPosition(x, y);
             try {
-                otherPlayers.get(playerId).getBody().setTransform(x + otherPlayers.get(playerId).getWidth() / 2, y + otherPlayers.get(playerId).getHeight() / 2, 0);
+                Gdx.app.postRunnable(new Runnable() {
+
+                    @Override
+                    public void run () {
+                        otherPlayers.get(playerId).getBody().setTransform(x + otherPlayers.get(playerId).getWidth() / 2, y + otherPlayers.get(playerId).getHeight() / 2, 0);
+                    }
+                });
+
+
             } catch (Exception e){
                 e.printStackTrace();
             }
@@ -215,6 +225,12 @@ public class ClientController extends ApplicationAdapter {
                 try {
                     for (HashMap.Entry<String, Enemy> enemy : enemies.entrySet()) {
                         if (enemy.getValue().getBody().getPosition().dst(bomb.getPosition()) <= bomb.getRadius()) {
+                            // Send onKillScore to server when the mainPlayer killed an enemy with a bomb
+                            if(mainPlayer.equals(bomb.getPlayer())) {
+                                mainPlayer.getScore().addScore(enemy.getValue().getOnKillScore());
+                                playScreen.getHud().updateScore(mainPlayer.getScore().getScoreValue());
+                                client.updateScoreSignal(mainPlayer, enemy.getValue().getOnKillScore());
+                            }
                             enemy.getValue().destroyBody();
                             enemies.remove(enemy.getKey());
                         }
@@ -225,8 +241,18 @@ public class ClientController extends ApplicationAdapter {
                 try {
                     for (HashMap.Entry<String, Player> player : otherPlayers.entrySet()) {
                         if (player.getValue().getBody().getPosition().dst(bomb.getPosition()) <= bomb.getRadius()) {
-                            player.getValue().destroyBody();
-                            otherPlayers.remove(player.getKey());
+                            if(mainPlayer.equals(bomb.getPlayer())) {
+                                mainPlayer.getScore().addScore(player.getValue().getOnKillScore());
+                                playScreen.getHud().updateScore(mainPlayer.getScore().getScoreValue());
+                                client.updateScoreSignal(mainPlayer, player.getValue().getOnKillScore());
+                            }
+                            boolean isAlive = player.getValue().decreaseLife();
+                            if(!isAlive){
+                                Gdx.app.log("DEAD", "player DIED");
+                                player.getValue().destroyBody();
+                                otherPlayers.remove(player.getValue());
+                            }
+                            //
                         }
                     }
                 } catch (Exception e){
@@ -235,11 +261,11 @@ public class ClientController extends ApplicationAdapter {
 
 
                 if(mainPlayer.getBody().getPosition().dst(bomb.getPosition()) <= bomb.getRadius()){
-                    mainPlayer.destroyBody();
-                    setToScoreScreen = true;
+                    decreaseMainPlayerLife();
+                    //setToScoreScreen = true;
                 }
 
-                if(bomb.getIdPlayer().equals(mainPlayer)){
+                if(bomb.getPlayer().equals(mainPlayer)){
                     mainPlayer.decreaseBombOnField();
                     playScreen.getHud().updateBombs(mainPlayer.getMaxBombOnField()-mainPlayer.getBombOnField());
                 }
@@ -252,12 +278,23 @@ public class ClientController extends ApplicationAdapter {
         }
     }
 
-    public void createBomb(int bombId, int playerId, float x, float y){
+    public void createBomb(int bombId, String playerId, float x, float y){
         // TODO change player attribution
 
-        Bomb bomb = new Bomb(bombId, world, new Vector2(x, y), bombTexture, mainPlayer, mainPlayer.getBombRadius());
+        Player playerWhoDropTheBomb = getPlayerFromId(playerId);
+
+        /*for(HashMap.Entry<String,Player> otherPlayer : otherPlayers.entrySet()){
+            if(otherPlayer.getValue().getId().equals(playerId)){
+                playerWhoDropTheBomb = otherPlayer.getValue();
+            }
+        }
+        if(playerWhoDropTheBomb == null){
+            playerWhoDropTheBomb = mainPlayer;
+        }*/
+
+        Bomb bomb = new Bomb(bombId, world, new Vector2(x, y), bombTexture, playerWhoDropTheBomb, playerWhoDropTheBomb.getBombRadius());
         //bomb.setRegion(bomb.getTexture());
-        if(bomb.getIdPlayer().equals(mainPlayer)){
+        if(bomb.getPlayer().equals(mainPlayer)){
             mainPlayer.increaseBombOnField();
             playScreen.getHud().updateBombs(mainPlayer.getMaxBombOnField() - mainPlayer.getBombOnField());
         }
@@ -266,12 +303,16 @@ public class ClientController extends ApplicationAdapter {
 
     public void handleCollision(Fixture fixture){
         if(mainPlayer.getFixture() == fixture){
-            boolean isAlive = mainPlayer.decreaseLife();
-            if(!isAlive){
-                client.PlayerDiedSignal(mainPlayer);
-            }
-            playScreen.getHud().updateLife(mainPlayer.getLife());
+            decreaseMainPlayerLife();
         }
+    }
+
+    public void decreaseMainPlayerLife(){
+        boolean isAlive = mainPlayer.decreaseLife();
+        if(!isAlive){
+            client.PlayerDiedSignal(mainPlayer);
+        }
+        playScreen.getHud().updateLife(mainPlayer.getLife());
     }
 
     public void handleInput(float delta){
@@ -341,10 +382,10 @@ public class ClientController extends ApplicationAdapter {
     }
 
     public void drawOthersBomberman(SpriteBatch batch){
-        for(HashMap.Entry<String,Player> autrePersonnage : otherPlayers.entrySet()){
-            autrePersonnage.getValue().updatePlayer();
+        for(HashMap.Entry<String,Player> otherPlayer : otherPlayers.entrySet()){
+            otherPlayer.getValue().updatePlayer();
             //autrePersonnage.getValue().getBody().setTransform(autrePersonnage.getValue().getX(), autrePersonnage.getValue().getY(), 0);
-            autrePersonnage.getValue().draw(batch);
+            otherPlayer.getValue().draw(batch);
             //autrePersonnage.getValue().draw(batch,200);
         }
     }
@@ -358,18 +399,26 @@ public class ClientController extends ApplicationAdapter {
         }
     }
 
+    public Player getPlayerFromId(String playerId){
+        for(HashMap.Entry<String,Player> otherPlayer : otherPlayers.entrySet()){
+            if(otherPlayer.getValue().getId().equals(playerId)){
+                return otherPlayer.getValue();
+            }
+        }
+        return mainPlayer;
+    }
 
     public void removePlayer(String playerId){
         otherPlayers.remove(playerId);
     }
 
     public void switchToScoreScreen(){
-        System.out.println("NEEED TO CHANGE TO scoreSCEEDS");
         ((Game)Gdx.app.getApplicationListener()).setScreen(new ScoreScreen(game.getMenuScreen()));
     }
 
     public void handleEndOfGame(){
-        removePlayer(mainPlayer.getId());
+        mainPlayer.destroyBody();
+        client.disconnectFromServer();
         setToScoreScreen=true;
     }
 

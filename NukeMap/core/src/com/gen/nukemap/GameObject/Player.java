@@ -12,6 +12,7 @@ import java.util.List;
 public class Player extends Personage {
 
     private Score score;
+
     private int bombOnField = 0;
     private int maxBombOnField = 3;
 
@@ -24,18 +25,20 @@ public class Player extends Personage {
     public Player(String id, World world, Vector2 position, Texture texture, int x, int y, float width, float height, int life, int onKillScore) {
         super(id, world, position, texture, x, y, width, height, life, onKillScore);
         createBody();
+        this.score = new Score();
 
     }
 
     public Player(Player player){
         super(player.id, player.world, player.position, player.getTexture(), player.getX(), player.getY(), player.getWidth(), player.getHeight(), player.life, player.onKillScore);
+        this.score = new Score(player.score);
         setPlayer(player);
         createBody();
     }
 
     public void setPlayer(Player player) {
         this.setPosition(player.position);
-        this.score = new Score(score);
+        this.score = new Score(player.score);
     }
 
 
@@ -109,6 +112,11 @@ public class Player extends Personage {
     public void decreaseBombOnField(){
         --bombOnField;
     }
+
+    public Score getScore(){
+        return score;
+    }
+
 
     public void obtainPowerUp(PowerUp powerUp) {
         /*if (this.amount + powerUp.getAmountBonus() < maxAmount) {

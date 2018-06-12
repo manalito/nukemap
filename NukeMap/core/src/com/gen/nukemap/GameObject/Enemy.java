@@ -17,7 +17,6 @@ public class Enemy extends Personage {
                  int onKillScore) {
         super(id, world, position, texture, x, y, width, height, life, onKillScore);
         createBody();
-
     }
 
     public void updateEnemy(){
