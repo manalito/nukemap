@@ -68,23 +68,11 @@ public class Player extends Personage {
         setPosition(body.getPosition().x - this.getWidth() / 2, body.getPosition().y - this.getHeight() / 2);
     }
 
-    public void updateForOtherPlayers(){
-        setPosition(body.getPosition().x - this.getWidth() / 2, body.getPosition().y - this.getHeight() / 2);
-    }
-    public Bomb dropBomb() {
-        //Bomb bomb = new Bomb(world, body.getPosition(), this, bombRadius);
-        //return bomb;
-        return null;
-    }
-
     public boolean decreaseLife(){
         --life;
         if(life == 0){
             isAlive = false;
         }
-
-        System.out.println("Life decreased, actual number: " + life);
-
         return isAlive;
     }
 
@@ -95,8 +83,6 @@ public class Player extends Personage {
     public int getBombRadius() {
         return bombRadius;
     }
-
-
 
     public int getMaxBombOnField() {
         return maxBombOnField;
@@ -113,20 +99,11 @@ public class Player extends Personage {
         --bombOnField;
     }
 
+    public void setBombOnField(int bombOnField) {
+        this.bombOnField = bombOnField;
+    }
+
     public Score getScore(){
         return score;
     }
-
-
-    public void obtainPowerUp(PowerUp powerUp) {
-        /*if (this.amount + powerUp.getAmountBonus() < maxAmount) {
-            this.amount += powerUp.getAmountBonus();
-        }
-        if (this.radius + powerUp.getRadiusBonus() < maxRadius) {
-            this.radius += powerUp.getRadiusBonus();
-        }*/
-    }
-
-
-
 }

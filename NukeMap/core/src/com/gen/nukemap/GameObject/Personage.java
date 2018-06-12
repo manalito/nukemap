@@ -103,4 +103,5 @@ public abstract class Personage extends GameObject {
     public Body getBody(){
         return body;
     }
+
 }
