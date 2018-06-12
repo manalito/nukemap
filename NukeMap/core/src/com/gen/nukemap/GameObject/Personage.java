@@ -8,19 +8,23 @@ import com.gen.nukemap.NukeMap;
 public abstract class Personage extends GameObject {
 
     protected Body body;
+    protected Fixture fixture;
     public enum STATE {FRONT, BOTTOM, LEFT, RIGHT}
 
     protected STATE state = STATE.BOTTOM; // default texture region
+    protected boolean isAlive = true;
     protected int life = 0;
     protected int onKillScore = 0;
+    protected String id = "";
 
 
     public Personage() {
         super();
     }
 
-    public Personage(World world, Vector2 position, Texture texture, float x, float y, float width, float height, int life, int onKillScore) {
+    public Personage(String id, World world, Vector2 position, Texture texture, float x, float y, float width, float height, int life, int onKillScore) {
         super(world, position, texture, x , y, width, height);
+        this.id = id;
         this.life = life;
         this.onKillScore = onKillScore;
     }
@@ -35,30 +39,24 @@ public abstract class Personage extends GameObject {
 
         body = world.createBody(bodyDef);
 
-        CircleShape shape = new CircleShape();
-        shape.setRadius(getWidth() / 4f + getHeight() / 4f);
-
-        FixtureDef fixtureDef = new FixtureDef();
-
-        fixtureDef.filter.categoryBits = NukeMap.PERSO_BIT;
-        fixtureDef.filter.maskBits = NukeMap.DEFAULT_BIT | NukeMap.UNBREAK_BIT | NukeMap.BREAK_BIT | NukeMap.PERSO_BIT;
+        defineFixture();
+    }
 
 
+    public void destroyBody(){
+        world.destroyBody(body);
+    }
 
-        fixtureDef.shape = shape;
-        fixtureDef.density = 10f;
-        body.createFixture(fixtureDef);
+    public abstract void defineFixture();
 
-        // TEST
-        fixtureDef.isSensor = true;
+    public abstract Fixture getFixture();
 
+    public String getId(){
+        return id;
+    }
 
-        body.createFixture(fixtureDef).setUserData("shape");
-
-        //TEST
-
-
-        shape.dispose();
+    public void setId(String id) {
+        this.id = id;
     }
 
     public int getLife() {

@@ -12,22 +12,23 @@ import java.util.List;
 public class Player extends Personage {
 
     private Score score;
-    private int bombOnField;
+    private int bombOnField = 0;
     private int maxBombOnField = 3;
-    private int bombRadius = 2;
+
+    private int bombRadius = 1;
 
     public Player() {
         super();
     }
 
-    public Player(World world, Vector2 position, Texture texture, int x, int y, float width, float height, int life, int onKillScore) {
-        super(world, position, texture, x, y, width, height, life, onKillScore);
+    public Player(String id, World world, Vector2 position, Texture texture, int x, int y, float width, float height, int life, int onKillScore) {
+        super(id, world, position, texture, x, y, width, height, life, onKillScore);
         createBody();
 
     }
 
-    public Player(Player player) {
-        super(player.world, player.position, player.getTexture(), player.getX(), player.getY(), player.getWidth(), player.getHeight(), player.life, player.onKillScore);
+    public Player(Player player){
+        super(player.id, player.world, player.position, player.getTexture(), player.getX(), player.getY(), player.getWidth(), player.getHeight(), player.life, player.onKillScore);
         setPlayer(player);
         createBody();
     }
@@ -38,6 +39,27 @@ public class Player extends Personage {
     }
 
 
+    public void defineFixture(){
+        FixtureDef fixtureDef = new FixtureDef();
+
+        fixtureDef.filter.categoryBits = NukeMap.PERSO_BIT;
+        fixtureDef.filter.maskBits = NukeMap.DEFAULT_BIT | NukeMap.UNBREAK_BIT | NukeMap.BREAK_BIT | NukeMap.PERSO_BIT;
+
+
+        CircleShape shape = new CircleShape();
+        shape.setRadius(getWidth() / 4f + getHeight() / 4f);
+
+        fixtureDef.shape = shape;
+        fixtureDef.density = 10f;
+        body.createFixture(fixtureDef);
+
+        // TEST
+        fixtureDef.isSensor = true;
+        fixture = body.createFixture(fixtureDef);
+        fixture.setUserData("player");
+
+        shape.dispose();
+    }
 
     public void updatePlayer(){
         setPosition(body.getPosition().x - this.getWidth() / 2, body.getPosition().y - this.getHeight() / 2);
@@ -52,8 +74,40 @@ public class Player extends Personage {
         return null;
     }
 
+    public boolean decreaseLife(){
+        --life;
+        if(life == 0){
+            isAlive = false;
+        }
+
+        System.out.println("Life decreased, actual number: " + life);
+
+        return isAlive;
+    }
+
+    public Fixture getFixture(){
+        return fixture;
+    }
+
     public int getBombRadius() {
         return bombRadius;
+    }
+
+
+
+    public int getMaxBombOnField() {
+        return maxBombOnField;
+    }
+
+    public int getBombOnField(){
+        return bombOnField;
+    }
+
+    public void increaseBombOnField(){
+        ++bombOnField;
+    }
+    public void decreaseBombOnField(){
+        --bombOnField;
     }
 
     public void obtainPowerUp(PowerUp powerUp) {

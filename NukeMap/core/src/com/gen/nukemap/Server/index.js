@@ -7,6 +7,8 @@ const numberOfPlayers = 2;
 
 var enemies = [];
 
+var bombId=0;
+
 server.listen(8080,function(){
     console.log("Server is now running...");
 });
@@ -37,23 +39,28 @@ io.on('connection',function(socket){
            data.id=socket.id;
            socket.broadcast.emit('playerMoved',data);
 
-            console.log("Player has moved : " + "ID : " + data.id + "X: " + data.x + "Y: " + data.y  + "State: " + data.state);
+            //console.log("Player has moved : " + "ID : " + data.id + "X: " + data.x + "Y: " + data.y  + "State: " + data.state);
 
-           /*for(var i=0; i < players.length; i++){
-                if(players.id ==data.id){
-                    players[i].x = data.x;
-                    players[i].y = data.y;
-                    //players[i].state = data.state;
-                }
-           }*/
+    });
 
+    socket.on('playerDied',function(data){
+          socket.emit('endGame',data);
+
+          console.log("Player died : ");
     });
         socket.on('bombDropped',function(data){
 
-                   data.id=socket.id;
-                   socket.broadcast.emit('bombok',data);
-                   socket.emit('bombok', data);
+                   data.id=bombId++;
+                   io.sockets.emit('bombDroppedValid',data);
                    console.log("Bomb dropped : " + "ID : " + data.id + "X: " + data.x + "Y: " + data.y);
+                   //We wait 3 seconds before explosion occures
+                   var timer = 3000;
+                   setTimeout(function() {
+                        // get all the cells,monsters and ennemies that has to be destroyed/killed
+                        // Whatever you want to do after the wait
+                        console.log("Bomb exploded after 3 seconds !");
+                        io.sockets.emit('bombExplose',data);
+                   }, timer);
 
             });
 

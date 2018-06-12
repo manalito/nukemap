@@ -4,16 +4,15 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.loaders.AssetLoader;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
@@ -22,11 +21,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.gen.nukemap.NukeMap;
-import javafx.application.Platform;
-import javafx.scene.layout.VBox;
 
-import javax.xml.soap.Text;
 import java.awt.*;
 
 public class ScoreScreen implements Screen{
@@ -40,11 +35,13 @@ public class ScoreScreen implements Screen{
     private Texture background = new Texture("landscape-background.png");
     protected Skin skin;
 
+    protected int[] scores;
+
     public ScoreScreen(MenuScreen menuScreen)
     {
         //atlas = new TextureAtlas("skin.atlas");
         // skin = new Skin(Gdx.files.internal("skin.json"), atlas);
-
+        scores = new int[4];
 
         this.menuScreen = menuScreen;
         batch = new SpriteBatch();
@@ -80,7 +77,22 @@ public class ScoreScreen implements Screen{
         menuTable.center();
 
 
+
         ImageButton backToMenu = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture("quitbtn.jpg"))));
+
+        Label  scoresLabel = new Label("Scores", new Label.LabelStyle(new BitmapFont(), Color.BLACK));
+
+        Label  scoreClient1Label = new Label("Score player 1", new Label.LabelStyle(new BitmapFont(), Color.BLACK));
+        Label scoreClient1Value  = new Label(String.format("%04d",scores[0]), new Label.LabelStyle(new BitmapFont(), Color.BLACK));
+        scoreClient1Label.setScale(100,100);
+
+        Label  scoreClient2Label = new Label("Score player 2", new Label.LabelStyle(new BitmapFont(), Color.BLACK));
+        Label scoreClient2Value  = new Label(String.format("%04d",scores[1]), new Label.LabelStyle(new BitmapFont(), Color.BLACK));
+        Label  scoreClient3Label = new Label("Score player 3", new Label.LabelStyle(new BitmapFont(), Color.BLACK));
+        Label scoreClient3Value  = new Label(String.format("%04d",scores[2]), new Label.LabelStyle(new BitmapFont(), Color.BLACK));
+
+        Label  scoreClient4Label = new Label("Score player 4", new Label.LabelStyle(new BitmapFont(), Color.BLACK));
+        Label scoreClient4Value  = new Label(String.format("%04d",scores[3]), new Label.LabelStyle(new BitmapFont(), Color.BLACK));
 
 
         backToMenu.addListener(new ClickListener(){
@@ -90,7 +102,36 @@ public class ScoreScreen implements Screen{
             }
         });
 
+        scoresLabel.setFontScale(4,4);
+        menuTable.add(scoresLabel).padTop(10);
+        menuTable.row();
+
+        scoreClient1Label.setFontScale(2,2);
+        scoreClient1Value.setFontScale(2,2);
+        menuTable.add(scoreClient1Label).padTop(10);
+        menuTable.add(scoreClient1Value).padTop(10);
+        menuTable.row();
+
+        scoreClient2Label.setFontScale(2,2);
+        scoreClient2Value.setFontScale(2,2);
+        menuTable.add(scoreClient2Label).padTop(10);
+        menuTable.add(scoreClient2Value).padTop(10);
+        menuTable.row();
+
+        scoreClient3Label.setFontScale(2,2);
+        scoreClient3Value.setFontScale(2,2);
+        menuTable.add(scoreClient3Label).padTop(10);
+        menuTable.add(scoreClient3Value).padTop(10);
+        menuTable.row();
+
+        scoreClient4Label.setFontScale(2,2);
+        scoreClient4Value.setFontScale(2,2);
+        menuTable.add(scoreClient4Label).padTop(10);
+        menuTable.add(scoreClient4Value).padTop(10);
+        menuTable.row();
+
         menuTable.add(backToMenu);
+        menuTable.row();
         stage.addActor(menuTable);
 
     }

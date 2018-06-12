@@ -6,10 +6,15 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.gen.nukemap.Screens.*;
 
+import javax.management.modelmbean.ModelMBeanNotificationBroadcaster;
+import java.awt.*;
+
 public class NukeMap extends Game {
     public static final int V_WIDTH = 960;
     public static final int V_HEIGHT = 704;
     public static final float PPM = 100;
+
+    public MenuScreen menuScreen;
 
     public SpriteBatch batch;
     public static AssetManager manager;
@@ -19,13 +24,15 @@ public class NukeMap extends Game {
     public static final short BREAK_BIT = 4;
     public static final short UNBREAK_BIT = 8;
     public static final short DESTROYED_BIT = 16;
+    public static final short BOMB_BIT = 32;
 
     @Override
     public void create () {
         batch = new SpriteBatch();
         //PlayScreen playScreen = new PlayScreen(this);
-        MenuScreen menuScreen = new MenuScreen();
         // playScreen.resize(1000, 600);
+
+        menuScreen = new MenuScreen();
         setScreen(menuScreen);
         /*manager.load("Jihad Trap - Drop The Bomb.mp3", Music.class);
         manager.load("explosion.wav", Sound.class);
@@ -38,4 +45,7 @@ public class NukeMap extends Game {
         super.render();
     }
 
+    public MenuScreen getMenuScreen(){
+        return menuScreen;
+    }
 }

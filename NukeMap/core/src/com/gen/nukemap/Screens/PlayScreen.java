@@ -1,5 +1,6 @@
 package com.gen.nukemap.Screens;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -13,6 +14,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.viewport.*;
 import com.gen.nukemap.Client.ClientController;
+import com.gen.nukemap.Scenes.Hud;
 import com.gen.nukemap.Tools.WorldContactListener;
 import com.gen.nukemap.NukeMap;
 import com.gen.nukemap.Client.Client;
@@ -37,6 +39,9 @@ public class PlayScreen implements Screen {
     private World world;
     private Box2DDebugRenderer b2dr;
 
+    private Hud hud;
+
+
     public PlayScreen(NukeMap game){
         this.game = game;
         texture = new Texture("map.png");
@@ -52,15 +57,15 @@ public class PlayScreen implements Screen {
         world = new World(new Vector2(0,0), true);
         b2dr = new Box2DDebugRenderer();
 
-        world.setContactListener(new WorldContactListener());
-
-
         new B2drWorldCreator(world, map);
 
-        clientController = new ClientController(world);
+        clientController = new ClientController(this.game, world, this);
         client = new Client(clientController);
-
         clientController.setClient(client);
+
+        hud = new Hud(game.batch);
+
+        world.setContactListener(new WorldContactListener(clientController));
         clientController.initiateConnection(client);
     }
 
@@ -89,9 +94,9 @@ public class PlayScreen implements Screen {
         Gdx.gl.glClearColor(0,0,0,1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         // gamePort.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        game.batch.setProjectionMatrix(gamecam.combined);
         renderer.render();
 
+        game.batch.setProjectionMatrix(gamecam.combined);
         b2dr.render(world, gamecam.combined);
         game.batch.begin();
 
@@ -106,8 +111,22 @@ public class PlayScreen implements Screen {
         //resize(texture.getWidth(), texture.getHeight());
         game.batch.end();
 
+        game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
+        hud.stage.draw();
+
+        if(clientController.setToScoreScreen){
+            ((Game)Gdx.app.getApplicationListener()).setScreen(new ScoreScreen(game.getMenuScreen()));
+
+        }
+
         world.step(Gdx.graphics.getDeltaTime(), 6, 2);
     }
+
+
+    public Hud getHud(){
+        return hud;
+    }
+
 
     @Override
     public void resize(int width, int height) {
@@ -137,10 +156,13 @@ public class PlayScreen implements Screen {
         renderer.dispose();
         world.dispose();
         b2dr.dispose();
+        hud.dispose();
     }
 
     public static Map getMap(){
         return map;
     }
+
+
 
 }
