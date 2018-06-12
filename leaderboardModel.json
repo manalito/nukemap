@@ -1,0 +1,54 @@
+{
+    "Scores":[
+        {
+            "position": 1,
+            "nom":"Ernestin",
+            "score":999999
+        },
+        {
+            "position": 2,
+            "nom":"Kevin",
+            "score":666666
+        },
+        {
+            "position": 3,
+            "nom":"Phillipe",
+            "score":333333
+        },
+        {
+            "position": 4,
+            "nom":"Terrence",
+            "score":222222
+        },
+        {
+            "position": 5,
+            "nom":"Jeane",
+            "score":99999
+        },
+        {
+            "position": 6,
+            "nom":"Brigitte",
+            "score":66666
+        },
+        {
+            "position": 7,
+            "nom":"Margot",
+            "score":33333
+        },
+        {
+            "position": 7,
+            "nom":"Philibert",
+            "score":22222
+        },
+        {
+            "position": 9,
+            "nom":"Jean-Charles",
+            "score":1234
+        },
+        {
+            "position": 10,
+            "nom":"Jean-Michel",
+            "score":69
+        }
+    ]
+}
