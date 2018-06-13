@@ -3,6 +3,7 @@ package com.gen.nukemap.Screens;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -41,6 +42,8 @@ public class PlayScreen implements Screen {
 
     private Hud hud;
 
+    private Music music;
+
 
     public PlayScreen(NukeMap game){
         this.game = game;
@@ -64,6 +67,12 @@ public class PlayScreen implements Screen {
         clientController.setClient(client);
 
         hud = new Hud(game.batch);
+
+        //creation of music
+        music = Gdx.audio.newMusic(Gdx.files.internal("music/Jihad Trap - Drop The Bomb.mp3"));
+        music.setVolume(0.1f);
+        music.setLooping(true);
+        music.play();
 
         world.setContactListener(new WorldContactListener(clientController));
         clientController.initiateConnection(client);
@@ -157,6 +166,7 @@ public class PlayScreen implements Screen {
         world.dispose();
         b2dr.dispose();
         hud.dispose();
+        music.dispose();
     }
 
     public static Map getMap(){

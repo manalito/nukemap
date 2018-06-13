@@ -1,5 +1,7 @@
 package com.gen.nukemap;
 
+import com.badlogic.gdx.Audio;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.*;
 import com.badlogic.gdx.Game;
@@ -17,7 +19,7 @@ public class NukeMap extends Game {
     public MenuScreen menuScreen;
 
     public SpriteBatch batch;
-    public static AssetManager manager;
+    public static AssetManager manager; // manager for music
 
     public static final short DEFAULT_BIT = 1;
     public static final short PERSO_BIT = 2;
@@ -26,18 +28,21 @@ public class NukeMap extends Game {
     public static final short DESTROYED_BIT = 16;
     public static final short BOMB_BIT = 32;
 
+
     @Override
     public void create () {
         batch = new SpriteBatch();
         //PlayScreen playScreen = new PlayScreen(this);
         // playScreen.resize(1000, 600);
 
+        //manager= new AssetManager();
+        //manager.load("music/Jihad Trap - Drop The Bomb.mp3", Music.class);
+        //manager.load("sound/explosion.mp3", Sound.class);
+        //manager.load("sound/explosion.mp3", Sound.class);
+        //manager.finishLoading();
+
         menuScreen = new MenuScreen();
         setScreen(menuScreen);
-        /*manager.load("Jihad Trap - Drop The Bomb.mp3", Music.class);
-        manager.load("explosion.wav", Sound.class);
-        manager.load("explosion.wav2", Sound.class);
-        manager.finishLoading();*/
     }
 
     @Override

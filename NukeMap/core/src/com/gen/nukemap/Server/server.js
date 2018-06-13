@@ -63,7 +63,7 @@ io.on('connection', function (socket) {
         io.sockets.emit('bombDroppedValid', data);
         console.log("Bomb dropped : " + "ID : " + data.playerid + "X: " + data.x + "Y: " + data.y);
         //We wait 3 seconds before explosion occures
-        var timer = 3000;
+        var timer = 2300;
         setTimeout(function () {
             // get all the cells,monsters and ennemies that has to be destroyed/killed
             // Whatever you want to do after the wait

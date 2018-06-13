@@ -5,6 +5,7 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -58,6 +59,7 @@ public class ClientController extends ApplicationAdapter {
     private TextureRegion creeperRight = new TextureRegion();
     private HashMap<String, Enemy> enemies;
 
+    private Sound explosionSound = Gdx.audio.newSound(Gdx.files.internal("sound/explosion.wav"));
 
 
     public ClientController(NukeMap game, World world, PlayScreen playScreen){
@@ -95,6 +97,7 @@ public class ClientController extends ApplicationAdapter {
         bombList = new ArrayList<Bomb>();
         otherPlayers = new HashMap<String, Player>();
         enemies = new HashMap<String, Enemy>();
+
     }
 
     public void initiateConnection(Client client){
@@ -299,6 +302,7 @@ public class ClientController extends ApplicationAdapter {
             playScreen.getHud().updateBombs(mainPlayer.getMaxBombOnField() - mainPlayer.getBombOnField());
         }
         bombList.add(bomb); //  bomb.destroyBricks();
+        explosionSound.play(0.05f);
     }
 
     public void handleCollision(Fixture fixture){
